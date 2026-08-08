@@ -1,0 +1,16 @@
+--- components/ReviewScreen.tsx
++++ components/ReviewScreen.tsx
+@@ -244,7 +244,12 @@
+         const errText = await res.text();
+         throw new Error(`HTTP ${res.status}: ${errText.substring(0, 100)}...`);
+       } else {
+-        response = await res.json();
++        const rawText = await res.text();
++        try {
++          response = JSON.parse(rawText);
++        } catch (e: any) {
++          throw new Error(`Failed to parse JSON (Status: ${res.status}): ${rawText.substring(0, 200)}...`);
++        }
+       }
+       
+       if (response.error) {

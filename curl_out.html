@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>US President Timeline: A Yankee Guessing Game</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1e293b" />
+    <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* General Animations */
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+  
+  @keyframes scale-in { 
+    from { transform: scale(0.95); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+  }
+  .animate-scale-in { animation: scale-in 0.3s ease-out forwards; }
+
+  /* Component-specific Animations */
+  @keyframes pop-in-marker {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .animate-pop-in-marker { animation: pop-in-marker 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+  @keyframes rise-up {
+    0% { transform: translateY(20px); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-20px); opacity: 0; }
+  }
+  .animate-rise-up { animation: rise-up 2s ease-in-out infinite; }
+  
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); } 
+  }
+  .animate-scroll-continuous {
+    animation-name: scroll;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(calc(100vh + 20px)) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  /* Animation Utilities */
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+  .animation-delay-800 { animation-delay: 0.8s; }
+  .animation-delay-1000 { animation-delay: 1.0s; }
+</style>
+</head>
+  <body class="bg-slate-900">
+    <script>
+      // Polyfill for NPM packages that assume process exists in the browser
+      window.process = window.process || {};
+      window.process.env = window.process.env || {};
+    </script>
+    <div id="error-screen" style="position: absolute; top: 0; left: 0; right: 0; color:red; background: black; padding: 20px; z-index: 9999; display: none;"></div>
+    <div id="root"></div>
+    <script>
+      window.addEventListener('error', function(e) {
+        if (e.message !== 'ResizeObserver loop limit exceeded' && e.message !== 'ResizeObserver loop completed with undelivered notifications.') {
+          var errScreen = document.getElementById('error-screen');
+          errScreen.style.display = 'block';
+          errScreen.innerHTML += '<p>' + e.message + '</p><pre>' + (e.error ? e.error.stack : '') + '</pre>';
+        }
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        var errScreen = document.getElementById('error-screen');
+        errScreen.style.display = 'block';
+        errScreen.innerHTML += '<p>Unhandled Promise: ' + e.reason + '</p><pre>' + (e.reason && e.reason.stack ? e.reason.stack : '') + '</pre>';
+      });
+    </script>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

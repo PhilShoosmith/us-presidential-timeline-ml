@@ -1,0 +1,8 @@
+{
+  "name": "Remix7 Languages US President Timeline: A Yankee Guessing Game 1.5.0",
+  "description": "Test your knowledge of US Presidents by placing them on the correct spot on the timeline based on when their term began. Score points for accuracy and see how well you know your presidential history!",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
