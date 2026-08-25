@@ -23,7 +23,10 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
            <p>{t('privacy.p2')}</p>
 
            <h2 className="text-xl font-bold text-yellow-400 mt-6 mb-2">{t('privacy.h2')}</h2>
-           <p>{t('privacy.p3')}</p>
+           <p>
+             <span className="font-bold">{t('privacy.p3.bold')}</span>
+             {t('privacy.p3')}
+           </p>
            
            <h2 className="text-xl font-bold text-yellow-400 mt-6 mb-2">{t('privacy.h3')}</h2>
            <p>
