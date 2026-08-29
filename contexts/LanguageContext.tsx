@@ -101,7 +101,7 @@ const translations = {
     'review.advancedSearch': 'Advanced Search',
     'review.searchAndFilter': 'Search & Filter',
     'review.foundResults': 'Found {count} result(s). Click a card to learn more.',
-    'review.hoverToPause': 'Hover to pause, or click a card to learn more.',
+    'review.hoverToPause': 'Tap a card to pause or view more details',
     'review.speed': 'Speed',
     'review.noPortrait': 'No Portrait',
     'review.present': 'Present',

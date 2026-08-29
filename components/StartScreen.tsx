@@ -63,19 +63,23 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowIn
             <button onClick={() => onStart('president')} className="w-full px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all">{t('start.guessSuccessor')}</button>
           </div>
         </div>
+        
+        <div className="mt-8 flex justify-center items-center text-slate-300 font-bold text-xl">
+          <span className="mr-3">{t('start.hallOfFame')} -&gt;</span>
+          <button 
+            onClick={onShowLeaderboard}
+            className="text-4xl hover:scale-110 transition-transform p-1 bg-slate-800/50 rounded-full shadow-xl"
+            title={t('start.hallOfFame')}
+          >
+            🥇
+          </button>
+        </div>
       </div>
 
       <div className="absolute bottom-8 left-0 right-0 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-slate-400 z-20">
           <button onClick={onShowPrivacy} className="hover:text-blue-400 transition-colors underline underline-offset-2">{t('start.privacyPolicy')}</button>
           <button onClick={onShowTerms} className="hover:text-blue-400 transition-colors underline underline-offset-2">{t('start.termsOfService')}</button>
           <a href="mailto:historicaltimelines4@gmail.com?subject=US Presidents Timeline&body=BODY" className="hover:text-blue-400 transition-colors underline underline-offset-2">{t('start.feedback')}</a>
-          <button 
-            onClick={onShowLeaderboard}
-            className="text-2xl hover:scale-125 transition-transform p-1 bg-slate-800/50 rounded-full border border-slate-700 shadow-xl"
-            title={t('start.hallOfFame')}
-          >
-            🥇
-          </button>
       </div>
     </div>
   );
