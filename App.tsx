@@ -9,6 +9,7 @@ import Timeline from './components/Timeline';
 import Feedback from './components/Feedback';
 import EndScreen from './components/EndScreen';
 import RAGModal from './components/RAGModal';
+import CareerTreeModal from './components/CareerTreeModal';
 import Confetti from './components/Confetti';
 import NextPresidentGuesser from './components/NextPresidentGuesser';
 import ReviewScreen from './components/ReviewScreen';
@@ -76,9 +77,12 @@ const App: React.FC = () => {
   const [guessFeedback, setGuessFeedback] = useState<{ type: 'president' | 'year', value: number, isCorrect: boolean } | null>(null);
 
   const [isRagModalOpen, setIsRagModalOpen] = useState<boolean>(false);
-  const [ragContent, setRagContent] = useState<{ title: string; text: string; imageUrl?: string; } | null>(null);
+  const [ragContent, setRagContent] = useState<{ title: string; text: string; imageUrl?: string; presidentId?: number; } | null>(null);
   const [ragSources, setRagSources] = useState<GroundingSource[]>([]);
   const [isRagLoading, setIsRagLoading] = useState<boolean>(false);
+
+  const [isCareerTreeOpen, setIsCareerTreeOpen] = useState<boolean>(false);
+  const [selectedCareerPresident, setSelectedCareerPresident] = useState<President | null>(null);
 
   const [isInstructionsOpen, setIsInstructionsOpen] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
@@ -304,26 +308,37 @@ const App: React.FC = () => {
               )}
               <div className="w-full md:w-1/2 lg:max-w-md mt-4 md:mt-0 flex flex-col justify-start">
                 {gameState === 'feedback' && lastGuess ? (
-                  <Feedback lastGuess={lastGuess} onNext={nextRound} president={currentPresident} onLearnMore={async (p) => {
-                    setIsRagModalOpen(true);
-                    setIsRagLoading(true);
-                    setRagContent({ title: p.name, text: '', imageUrl: p.imageUrl });
-                    try {
-                      const res = await fetch('/api/generate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          model: "gemini-3.1-flash-lite",
-                          contents: `Tell me a brief history about US President ${p.name}. Focus on key events and legacy.`,
-                          config: { tools: [{googleSearch: {}}] }
-                        })
-                      });
-                      const response = await res.json();
-                      if (response.error) throw new Error(response.error);
-                      setRagContent({ title: p.name, text: response.text, imageUrl: p.imageUrl });
-                    } catch (e) { setRagContent({ title: p.name, text: t('rag.error'), imageUrl: p.imageUrl }); }
-                    finally { setIsRagLoading(false); }
-                  }} allPresidents={allPresidentsData} onStop={handleBackToStart} />
+                  <Feedback 
+                    lastGuess={lastGuess} 
+                    onNext={nextRound} 
+                    president={currentPresident} 
+                    onLearnMore={async (p) => {
+                      setIsRagModalOpen(true);
+                      setIsRagLoading(true);
+                      setRagContent({ title: p.name, text: '', imageUrl: p.imageUrl, presidentId: p.id });
+                      try {
+                        const res = await fetch('/api/generate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            model: "gemini-3.1-flash-lite",
+                            contents: `Tell me a brief history about US President ${p.name}. Focus on key events and legacy.`,
+                            config: { tools: [{googleSearch: {}}] }
+                          })
+                        });
+                        const response = await res.json();
+                        if (response.error) throw new Error(response.error);
+                        setRagContent({ title: p.name, text: response.text, imageUrl: p.imageUrl, presidentId: p.id });
+                      } catch (e) { setRagContent({ title: p.name, text: t('rag.error'), imageUrl: p.imageUrl, presidentId: p.id }); }
+                      finally { setIsRagLoading(false); }
+                    }} 
+                    onShowCareer={(p) => {
+                      setSelectedCareerPresident(p);
+                      setIsCareerTreeOpen(true);
+                    }}
+                    allPresidents={allPresidentsData} 
+                    onStop={handleBackToStart} 
+                  />
                 ) : (
                    <>
                     {gameMode === 'year' && (
@@ -366,6 +381,13 @@ const App: React.FC = () => {
       {isInstructionsOpen && <Instructions onClose={() => setIsInstructionsOpen(false)} />}
       {renderGameScreen()}
       <RAGModal isOpen={isRagModalOpen} isLoading={isRagLoading} content={ragContent} sources={ragSources} onClose={() => setIsRagModalOpen(false)} />
+      <CareerTreeModal 
+        isOpen={isCareerTreeOpen} 
+        onClose={() => setIsCareerTreeOpen(false)} 
+        president={selectedCareerPresident} 
+        allPresidents={allPresidentsData} 
+        onSelectPresident={(p) => setSelectedCareerPresident(p)} 
+      />
     </main>
   );
 };

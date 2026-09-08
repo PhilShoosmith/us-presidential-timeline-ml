@@ -39,7 +39,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
              {t('privacy.p5').split('historicaltimelines4@gmail.com').map((part, index, array) => (
                <React.Fragment key={index}>
                  {part}
-                 {index < array.length - 1 && <span className="font-bold text-white">historicaltimelines4@gmail.con</span>}
+                 {index < array.length - 1 && <span className="font-bold text-white">historicaltimelines4@gmail.com</span>}
                </React.Fragment>
              ))}
            </p>

@@ -52,3 +52,33 @@ export interface LastFactGuess {
 }
 
 export type AnyLastGuess = LastYearGuess | LastPresidentGuess | LastFactGuess;
+
+export type CareerCategory = 
+  | 'education'
+  | 'military'
+  | 'early_career'
+  | 'state_local'
+  | 'federal_diplomatic'
+  | 'presidency'
+  | 'post_presidency';
+
+export interface CareerNode {
+  id: string;
+  category: CareerCategory;
+  role: string;
+  organization?: string;
+  location?: string;
+  years: string;
+  details: string;
+  highlight?: boolean;
+}
+
+export interface PresidentCareerProfile {
+  presidentId: number;
+  presidentName: string;
+  highestEducation: string;
+  almaMater: string;
+  primaryField: string;
+  steppingStoneRole: string;
+  treeNodes: CareerNode[];
+}

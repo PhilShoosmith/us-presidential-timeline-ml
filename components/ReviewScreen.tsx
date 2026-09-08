@@ -165,7 +165,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
   const [periodQuery, setPeriodQuery] = useState('');
 
   const [isRagModalOpen, setIsRagModalOpen] = useState<boolean>(false);
-  const [ragContent, setRagContent] = useState<{ title: string; text: string; imageUrl?: string; } | null>(null);
+  const [ragContent, setRagContent] = useState<{ title: string; text: string; imageUrl?: string; presidentId?: number; } | null>(null);
   const [ragSources, setRagSources] = useState<GroundingSource[]>([]);
   const [isRagLoading, setIsRagLoading] = useState<boolean>(false);
   
@@ -226,7 +226,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
   const handleLearnMore = useCallback(async (president: President) => {
     setIsRagModalOpen(true);
     setIsRagLoading(true);
-    setRagContent({ title: president.name, text: '', imageUrl: president.imageUrl });
+    setRagContent({ title: president.name, text: '', imageUrl: president.imageUrl, presidentId: president.id });
     setRagSources([]);
 
     try {
@@ -256,7 +256,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
         throw new Error(response.error);
       }
 
-      setRagContent({ title: president.name, text: response.text, imageUrl: president.imageUrl });
+      setRagContent({ title: president.name, text: response.text, imageUrl: president.imageUrl, presidentId: president.id });
       const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
       const sources = (groundingChunks as any[] || [])
         .map(chunk => chunk.web)

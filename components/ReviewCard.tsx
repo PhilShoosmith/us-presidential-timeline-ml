@@ -1,7 +1,7 @@
 import React from 'react';
 import { President } from '../types';
-import PartyIcon from './HouseIcon';
 import { useLanguage } from '../contexts/LanguageContext';
+import { GitBranch } from 'lucide-react';
 
 interface ReviewCardProps {
   president: President;
@@ -28,7 +28,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ president, onMouseEnter, onMous
 
   return (
     <div
-      className="flex-shrink-0 w-full h-[32rem] md:h-[40rem] lg:h-[48rem] max-h-[calc(100vh-16rem)] bg-slate-800 rounded-3xl shadow-xl p-4 md:p-6 border border-slate-700/80 flex flex-col select-none cursor-pointer transform transition-all duration-300 hover:scale-105 hover:border-blue-500/80"
+      className="flex-shrink-0 w-full h-[32rem] md:h-[40rem] lg:h-[48rem] max-h-[calc(100vh-16rem)] bg-slate-800 rounded-3xl shadow-xl p-4 md:p-6 border border-slate-700/80 flex flex-col select-none cursor-pointer transform transition-all duration-300 hover:scale-105 hover:border-blue-500/80 group"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
@@ -48,7 +48,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ president, onMouseEnter, onMous
         )}
       </div>
       <div className="text-center flex-grow flex flex-col mt-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-white">{name}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-white group-hover:text-blue-300 transition-colors">{name}</h2>
         <p className="text-base md:text-lg text-slate-400 mt-1">{title}</p>
         <div className="flex justify-center items-center my-3">
             <p className="text-base md:text-lg text-amber-300/80 font-mono">
@@ -58,6 +58,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ president, onMouseEnter, onMous
         <p className="text-sm md:text-base text-slate-300 leading-relaxed text-left flex-grow overflow-hidden mt-2">
             {context}
         </p>
+
+        <div className="mt-3 pt-2.5 border-t border-slate-700/70 flex items-center justify-between text-xs text-blue-400 font-medium">
+          <span className="flex items-center gap-1.5">
+            <GitBranch className="w-3.5 h-3.5 text-blue-400" />
+            Career Tree & Roles
+          </span>
+          <span className="text-slate-400 text-[11px] group-hover:text-white transition-colors">Tap for details →</span>
+        </div>
       </div>
     </div>
   );

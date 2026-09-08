@@ -1,6 +1,7 @@
 import React from 'react';
 import { AnyLastGuess, President } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { GitBranch } from 'lucide-react';
 
 interface FeedbackProps {
   lastGuess: AnyLastGuess;
@@ -8,10 +9,11 @@ interface FeedbackProps {
   president: President;
   allPresidents: President[];
   onLearnMore: (president: President) => void;
+  onShowCareer?: (president: President) => void;
   onStop: () => void;
 }
 
-const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLearnMore, allPresidents, onStop }) => {
+const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLearnMore, onShowCareer, allPresidents, onStop }) => {
   const { t, getPresidentTranslation } = useLanguage();
 
   const renderFeedbackContent = () => {
@@ -132,10 +134,14 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
 
       <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
         <button
-          onClick={onNext}
-          className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+          onClick={onStop}
+          className="w-full sm:w-auto px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 flex items-center justify-center gap-2"
+          aria-label="Stop game and return to start screen"
         >
-          {t('feedback.nextRound')}
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.293 6.293a1 1 0 011.414 0L12 7.586l1.293-1.293a1 1 0 111.414 1.414L13.414 9l1.293 1.293a1 1 0 01-1.414 1.414L12 10.414l-1.293 1.293a1 1 0 01-1.414-1.414L10.586 9 9.293 7.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+          {t('feedback.stopPlaying')}
         </button>
         <button
           onClick={() => onLearnMore(president)}
@@ -147,15 +153,21 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
           </svg>
           {t('feedback.learnMore')}
         </button>
+        {onShowCareer && (
+          <button
+            onClick={() => onShowCareer(president)}
+            className="w-full sm:w-auto px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-500/50 flex items-center justify-center gap-2"
+            aria-label={`View Career Tree for ${president.name}`}
+          >
+            <GitBranch className="w-5 h-5" />
+            Career Tree
+          </button>
+        )}
         <button
-          onClick={onStop}
-          className="w-full sm:w-auto px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 flex items-center justify-center gap-2"
-          aria-label="Stop game and return to start screen"
+          onClick={onNext}
+          className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.293 6.293a1 1 0 011.414 0L12 7.586l1.293-1.293a1 1 0 111.414 1.414L13.414 9l1.293 1.293a1 1 0 01-1.414 1.414L12 10.414l-1.293 1.293a1 1 0 01-1.414-1.414L10.586 9 9.293 7.707a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-          {t('feedback.stopPlaying')}
+          {t('feedback.nextRound')}
         </button>
       </div>
     </div>
