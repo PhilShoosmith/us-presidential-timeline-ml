@@ -28,17 +28,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ president, onMouseEnter, onMous
 
   return (
     <div
-      className="flex-shrink-0 w-full h-[32rem] md:h-[40rem] lg:h-[48rem] max-h-[calc(100vh-16rem)] bg-slate-800 rounded-3xl shadow-xl p-4 md:p-6 border border-slate-700/80 flex flex-col select-none cursor-pointer transform transition-all duration-300 hover:scale-105 hover:border-blue-500/80 group"
+      className="flex-shrink-0 mx-auto w-auto aspect-[1/2] h-[32rem] md:h-[40rem] lg:h-[48rem] max-h-[calc(100vh-16rem)] bg-slate-800 rounded-3xl shadow-xl border border-slate-700/80 flex flex-col select-none cursor-pointer transform transition-all duration-300 hover:scale-105 hover:border-blue-500/80 group overflow-hidden"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
-      <div className="relative aspect-[3/4] w-full rounded-md overflow-hidden bg-black mb-3">
+      <div className="relative h-1/2 w-full overflow-hidden bg-black flex-shrink-0">
         {imageUrl ? (
           <img 
             src={imageUrl} 
             alt={`Portrait of ${name}`} 
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover object-top"
             loading="lazy"
           />
         ) : (
@@ -47,19 +47,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ president, onMouseEnter, onMous
           </div>
         )}
       </div>
-      <div className="text-center flex-grow flex flex-col mt-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-white group-hover:text-blue-300 transition-colors">{name}</h2>
-        <p className="text-base md:text-lg text-slate-400 mt-1">{title}</p>
-        <div className="flex justify-center items-center my-3">
-            <p className="text-base md:text-lg text-amber-300/80 font-mono">
+      <div className="text-center flex-grow flex flex-col p-3 md:p-4 min-h-0">
+        <h2 className="text-lg md:text-xl font-bold text-white group-hover:text-blue-300 transition-colors truncate">{name}</h2>
+        <p className="text-xs md:text-sm text-slate-400 mt-0.5 truncate">{title}</p>
+        <div className="flex justify-center items-center my-1 md:my-1.5 flex-shrink-0">
+            <p className="text-xs md:text-sm text-amber-300/80 font-mono">
               {termStart} – {termEndDisplay}
             </p>
         </div>
-        <p className="text-sm md:text-base text-slate-300 leading-relaxed text-left flex-grow overflow-hidden mt-2">
+        <div className="text-[11px] md:text-xs text-slate-300 leading-snug text-left flex-grow overflow-y-auto custom-scrollbar mt-1 pr-1.5">
             {context}
-        </p>
+        </div>
 
-        <div className="mt-3 pt-2.5 border-t border-slate-700/70 flex items-center justify-between text-xs text-blue-400 font-medium">
+        <div className="mt-2 pt-2 border-t border-slate-700/70 flex items-center justify-between text-[10px] md:text-xs text-blue-400 font-medium flex-shrink-0">
           <span className="flex items-center gap-1.5">
             <GitBranch className="w-3.5 h-3.5 text-blue-400" />
             Career Tree & Roles

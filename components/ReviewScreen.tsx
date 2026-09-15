@@ -387,7 +387,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
               }}
             >
               {[...presidents, ...presidents].map((president, index) => (
-                <div key={`${president.id}-${index}`} className="w-[20rem] md:w-[28rem] lg:w-[34rem] mx-4 md:mx-6 flex-shrink-0">
+                <div key={`${president.id}-${index}`} className="w-[16rem] md:w-[20rem] lg:w-[24rem] mx-4 md:mx-6 flex-shrink-0">
                   <ReviewCard
                     president={president}
                     onMouseEnter={() => setIsHoverPaused(true)}
