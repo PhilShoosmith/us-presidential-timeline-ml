@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { President, GameMode } from '../types';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Lightbulb } from 'lucide-react';
+import { Lightbulb, RefreshCw } from 'lucide-react';
 
 interface StartScreenProps {
   onStart: (mode: GameMode) => void;
@@ -15,8 +15,9 @@ interface StartScreenProps {
 }
 
 const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowInstructions, onReview, onShowPrivacy, onShowTerms, onShowLeaderboard }) => {
-  const { t } = useLanguage();
+  const { t, getPresidentTranslation } = useLanguage();
   const [dailyFact, setDailyFact] = useState<President | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     if (presidents.length > 0) {
@@ -31,6 +32,19 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowIn
       setDailyFact(presidents[index]);
     }
   }, [presidents]);
+
+  const handleRefreshFact = () => {
+    if (presidents.length <= 1) return;
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 500);
+
+    let nextPresident: President;
+    do {
+      const randomIndex = Math.floor(Math.random() * presidents.length);
+      nextPresident = presidents[randomIndex];
+    } while (nextPresident.id === dailyFact?.id);
+    setDailyFact(nextPresident);
+  };
   const allPortraits = presidents
     .map(president => ({ id: president.id, name: president.name, url: president.imageUrl }))
     .filter(p => p.url);
@@ -99,9 +113,24 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowIn
               <div className="bg-amber-500/20 p-2 md:p-3 rounded-full shrink-0">
                 <Lightbulb className="w-5 h-5 md:w-6 md:h-6 text-amber-400" />
               </div>
-              <div className="text-left">
-                <h3 className="text-xs md:text-sm font-bold text-amber-400 mb-1 tracking-wide uppercase">Daily Historical Fact: {dailyFact.name}</h3>
-                <p className="text-sm text-slate-300 leading-relaxed">{dailyFact.context}</p>
+              <div className="text-left flex-grow min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <h3 className="text-xs md:text-sm font-bold text-amber-400 tracking-wide uppercase truncate">
+                    {t('start.dailyHistoricalFact')}: {dailyFact.name}
+                  </h3>
+                  <button
+                    onClick={handleRefreshFact}
+                    className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-amber-300 text-xs font-medium border border-slate-600/60 hover:border-amber-500/40 transition-all duration-200 active:scale-95 shadow-sm"
+                    title={t('start.refreshFact')}
+                    aria-label={t('start.refreshFact')}
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 transition-transform duration-500 ${isRefreshing ? 'rotate-180 text-amber-400' : ''}`} />
+                    <span className="hidden sm:inline">{t('start.refreshFact')}</span>
+                  </button>
+                </div>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  {getPresidentTranslation(dailyFact.id, 'context', dailyFact.context)}
+                </p>
               </div>
             </div>
           </div>
