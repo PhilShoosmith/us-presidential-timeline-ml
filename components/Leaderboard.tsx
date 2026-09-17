@@ -12,6 +12,7 @@ interface LeaderboardProps {
 const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<GameMode>('fact');
+  const [timeFilter, setTimeFilter] = useState<'last_week' | 'last_month' | 'all_time'>('all_time');
   const [scores, setScores] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
@@ -53,15 +54,53 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
       setLoading(true);
       try {
         if (!db) { setLoading(false); return; }
-        const q = query(
-          collection(db, 'leaderboard'),
-          where('game_mode', '==', activeTab),
-          orderBy('score', 'desc'),
-          orderBy('total_time_left', 'desc'),
-          limit(10)
-        );
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(doc => doc.data() as any);
+        
+        let data: any[] = [];
+        
+        if (timeFilter === 'all_time') {
+          const q = query(
+            collection(db, 'leaderboard'),
+            where('game_mode', '==', activeTab),
+            orderBy('score', 'desc'),
+            orderBy('total_time_left', 'desc'),
+            limit(10)
+          );
+          const snapshot = await getDocs(q);
+          data = snapshot.docs.map(doc => doc.data());
+        } else {
+          // Fetch all for the active tab to filter client-side by date to avoid index requirements
+          const q = query(
+            collection(db, 'leaderboard'),
+            where('game_mode', '==', activeTab)
+          );
+          const snapshot = await getDocs(q);
+          let allData = snapshot.docs.map(doc => doc.data());
+          
+          const now = new Date();
+          let cutoffDate = new Date();
+          if (timeFilter === 'last_week') {
+            cutoffDate.setDate(now.getDate() - 7);
+          } else if (timeFilter === 'last_month') {
+            cutoffDate.setMonth(now.getMonth() - 1);
+          }
+          
+          data = allData.filter(row => {
+            if (!row.created_at) return false;
+            const dateObj = row.created_at.toDate ? row.created_at.toDate() : new Date(row.created_at);
+            return dateObj >= cutoffDate;
+          });
+          
+          // Client-side sort: score DESC, total_time_left DESC
+          data.sort((a, b) => {
+            if (b.score !== a.score) {
+              return (b.score || 0) - (a.score || 0);
+            }
+            return (b.total_time_left || 0) - (a.total_time_left || 0);
+          });
+          
+          // Limit to 10
+          data = data.slice(0, 10);
+        }
         
         const formattedData: LeaderboardEntry[] = data.map(row => {
           let dateObj = new Date();
@@ -85,7 +124,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
     };
 
     fetchScores();
-  }, [activeTab]);
+  }, [activeTab, timeFilter]);
 
   const getTabTitle = (mode: GameMode) => {
     if (mode === 'fact') return t('start.guessPresident');
@@ -93,23 +132,46 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
     return t('start.guessSuccessor');
   };
 
+  const getTimeTabTitle = (filter: 'last_week' | 'last_month' | 'all_time') => {
+    if (filter === 'last_week') return t('leaderboard.lastWeek') || 'Last Week';
+    if (filter === 'last_month') return t('leaderboard.lastMonth') || 'Last Month';
+    return t('leaderboard.allTime') || 'All-Time Greats';
+  };
+
   return (
     <div className="w-full min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <Confetti />
       <div className="w-full max-w-4xl bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-slate-700 p-8 flex flex-col animate-scale-in">
-        <header className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 text-center sm:text-left">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h1 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 text-center md:text-left md:flex-1 whitespace-nowrap">
             🏆 {t('leaderboard.title')}
           </h1>
-          <div className="flex gap-2 sm:gap-4">
+
+          <nav className="flex flex-wrap justify-center gap-1 bg-slate-900/40 p-1 rounded-xl border border-slate-700/50 flex-shrink-0">
+            {(['last_week', 'last_month', 'all_time'] as const).map(filter => (
+              <button
+                key={filter}
+                onClick={() => setTimeFilter(filter)}
+                className={`py-1 px-2 sm:px-3 rounded-lg font-bold text-[9px] sm:text-[10px] uppercase tracking-wider transition-all ${
+                  timeFilter === filter 
+                    ? 'bg-slate-700 text-amber-400 shadow-sm' 
+                    : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-300'
+                }`}
+              >
+                {getTimeTabTitle(filter)}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex gap-2 sm:gap-4 md:flex-1 justify-center md:justify-end">
             <button 
               onClick={toggleMute} 
-              className="w-10 h-10 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl transition-all text-xl"
+              className="w-10 h-10 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl transition-all text-xl shrink-0"
               title={isMuted ? "Unmute music" : "Mute music"}
             >
               {isMuted ? '🔇' : '🔊'}
             </button>
-            <button onClick={onBack} className="px-4 sm:px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl font-bold transition-all text-sm sm:text-base">
+            <button onClick={onBack} className="px-4 sm:px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl font-bold transition-all text-sm sm:text-base whitespace-nowrap">
               {t('leaderboard.back')}
             </button>
           </div>
