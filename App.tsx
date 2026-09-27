@@ -20,6 +20,7 @@ import Leaderboard from './components/Leaderboard';
 import Instructions from './components/Instructions';
 import { db } from './lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { soundService } from './services/soundService';
 
 import { useLanguage } from './contexts/LanguageContext';
 
@@ -96,14 +97,22 @@ const App: React.FC = () => {
     [gamePresidentIds, allPresidentsData]
   );
 
+  const [isSoundMuted, setIsSoundMuted] = useState<boolean>(() => soundService.getMuted());
+  const toggleSoundMute = useCallback(() => {
+    const newMuted = soundService.toggleMute();
+    setIsSoundMuted(newMuted);
+  }, []);
+
   const clearTimer = useCallback(() => {
     if (timerIdRef.current) {
       clearInterval(timerIdRef.current);
       timerIdRef.current = null;
     }
+    soundService.stopTimerSound();
   }, []);
 
   const startGame = useCallback((mode: GameMode) => {
+    soundService.resume();
     setShowConfetti(false);
     setGameMode(mode);
     const gamePresidents = (mode === 'year' || mode === 'fact')
@@ -121,7 +130,11 @@ const App: React.FC = () => {
   const handleShowLeaderboard = useCallback(() => setGameState('leaderboard'), []);
   const handleShowPrivacy = useCallback(() => setGameState('privacy'), []);
   const handleShowTerms = useCallback(() => setGameState('terms'), []);
-  const handleBackToStart = useCallback(() => setGameState('start'), []);
+  const handleBackToStart = useCallback(() => {
+    clearTimer();
+    soundService.stopTimerSound();
+    setGameState('start');
+  }, [clearTimer]);
 
   const handleYearGuess = useCallback((guessedYear: number) => {
     if (isGuessingInProgress || !presidents[currentRound]) return;
@@ -133,6 +146,7 @@ const App: React.FC = () => {
     const isCorrect = !timedOut && Math.abs(guessedYear - correctYear) <= YEAR_TOLERANCE;
 
     if (timedOut) {
+      soundService.playIncorrectSound();
       setTotalTimeLeft(prev => prev + timeLeftRef.current);
       setLastGuess({ type: 'year', isCorrect: false, guessedYear, correctYear, timedOut });
       setGameState('feedback');
@@ -141,6 +155,11 @@ const App: React.FC = () => {
     }
 
     setGuessFeedback({ type: 'year', value: guessedYear, isCorrect });
+    if (isCorrect) {
+      soundService.playCorrectSound();
+    } else {
+      soundService.playIncorrectSound();
+    }
 
     setTimeout(() => {
       if (isCorrect) {
@@ -171,6 +190,7 @@ const App: React.FC = () => {
     const isCorrect = !timedOut && guessedPresidentId === correctPresidentId;
 
     if (timedOut) {
+        soundService.playIncorrectSound();
         setTotalTimeLeft(prev => prev + timeLeftRef.current);
         setLastGuess({ type: 'president', isCorrect: false, guessedPresidentId, correctPresidentId, timedOut });
         setGameState('feedback');
@@ -179,6 +199,11 @@ const App: React.FC = () => {
     }
     
     setGuessFeedback({ type: 'president', value: guessedPresidentId, isCorrect });
+    if (isCorrect) {
+      soundService.playCorrectSound();
+    } else {
+      soundService.playIncorrectSound();
+    }
 
     setTimeout(() => {
         if (isCorrect) {
@@ -203,6 +228,7 @@ const App: React.FC = () => {
     const isCorrect = !timedOut && guessedPresidentId === correctPresidentId;
     
     if (timedOut) {
+      soundService.playIncorrectSound();
       setTotalTimeLeft(prev => prev + timeLeftRef.current);
       setLastGuess({ type: 'fact', isCorrect: false, guessedPresidentId, correctPresidentId, timedOut: true });
       setGameState('feedback');
@@ -211,6 +237,11 @@ const App: React.FC = () => {
     }
     
     setGuessFeedback({ type: 'president', value: guessedPresidentId, isCorrect });
+    if (isCorrect) {
+      soundService.playCorrectSound();
+    } else {
+      soundService.playIncorrectSound();
+    }
 
     setTimeout(() => {
       if (isCorrect) {
@@ -228,21 +259,29 @@ const App: React.FC = () => {
   useEffect(() => {
     if (gameState === 'playing' && !isAdmin) {
       setTimeLeft(ROUND_DURATION_SECONDS);
+      soundService.updateTimerSound(ROUND_DURATION_SECONDS);
       timerIdRef.current = window.setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
+            soundService.updateTimerSound(0);
             if(gameMode === 'year') handleYearGuess(0);
             else if (gameMode === 'president') handlePresidentGuess(0);
             else handleFactGuess(0);
             return 0;
           }
-          return prev - 1;
+          const nextVal = prev - 1;
+          soundService.updateTimerSound(nextVal);
+          return nextVal;
         });
       }, 1000);
     } else {
       clearTimer();
+      soundService.stopTimerSound();
     }
-    return clearTimer;
+    return () => {
+      clearTimer();
+      soundService.stopTimerSound();
+    };
   }, [gameState, currentRound, isAdmin, gameMode, handleYearGuess, handlePresidentGuess, handleFactGuess, clearTimer]);
 
   const nextRound = useCallback(() => {
@@ -299,7 +338,16 @@ const App: React.FC = () => {
         if (!currentPresident) return null;
         return (
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col items-center justify-start min-h-screen pt-20 sm:pt-24 pb-4">
-            <Scoreboard score={score} incorrect={currentRound - score} round={currentRound + 1} totalRounds={ROUNDS_PER_GAME} timeLeft={timeLeft} isAdmin={isAdmin} />
+            <Scoreboard 
+              score={score} 
+              incorrect={currentRound - score} 
+              round={currentRound + 1} 
+              totalRounds={ROUNDS_PER_GAME} 
+              timeLeft={timeLeft} 
+              isAdmin={isAdmin}
+              isMuted={isSoundMuted}
+              onToggleMute={toggleSoundMute}
+            />
             <div className="w-full flex flex-col md:flex-row md:items-start md:justify-center gap-4 lg:gap-8">
               {(gameState === 'feedback' || (gameState === 'playing' && gameMode !== 'fact')) && (
                 <div className="w-full flex justify-center md:justify-end flex-shrink-0 md:w-1/2 lg:w-auto">

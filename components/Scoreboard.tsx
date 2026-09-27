@@ -1,6 +1,7 @@
 import React from 'react';
 import { ROUND_DURATION_SECONDS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Volume2, VolumeX } from 'lucide-react';
 
 interface ScoreboardProps {
   score: number;
@@ -9,9 +10,11 @@ interface ScoreboardProps {
   totalRounds: number;
   timeLeft: number;
   isAdmin: boolean;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
 }
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalRounds, timeLeft, isAdmin }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalRounds, timeLeft, isAdmin, isMuted, onToggleMute }) => {
   const { t } = useLanguage();
   const radius = 24;
   const circumference = 2 * Math.PI * radius;
@@ -28,6 +31,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
   }
   if (timeLeft <= 5) {
     strokeColor = 'stroke-red-500';
+  }
+  if (timeLeft <= 5) {
     textColor = 'text-red-500 animate-pulse';
   }
 
@@ -83,14 +88,24 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
             )}
         </div>
 
-        {/* Right: Round */}
-        <div className="flex justify-end">
+        {/* Right: Round & Audio Toggle */}
+        <div className="flex justify-end items-center gap-3 sm:gap-4">
              <div className="flex flex-col items-end">
                 <span className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">{t('scoreboard.round').split(' ')[0]}</span>
                 <div className="text-white font-bold text-xl sm:text-2xl leading-none">
                     {round} <span className="text-slate-500 text-base sm:text-lg">/ {totalRounds}</span>
                 </div>
             </div>
+            {onToggleMute && (
+              <button
+                onClick={onToggleMute}
+                className="p-1.5 sm:p-2 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                title={isMuted ? "Unmute Sound" : "Mute Sound"}
+                aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
+              >
+                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />}
+              </button>
+            )}
         </div>
 
       </div>
