@@ -26,16 +26,16 @@ const Instructions: React.FC<InstructionsProps> = ({ onClose }) => {
       aria-labelledby="instructions-title"
     >
       <div
-        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full animate-scale-in"
+        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col animate-scale-in"
         onClick={e => e.stopPropagation()}
       >
-        <header className="p-4 border-b border-slate-700 flex justify-between items-center">
+        <header className="p-4 border-b border-slate-700 flex justify-between items-center shrink-0">
           <h2 id="instructions-title" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-500">
             {t('instructions.title')}
           </h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors text-3xl leading-none font-bold" aria-label="Close">&times;</button>
         </header>
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto">
           <GameModeExplanation title={t('start.guessYear')} icon="🗓️">
             {t('instructions.guessYear').split(' : ')[1] || t('instructions.guessYear').split(': ')[1]}
           </GameModeExplanation>
@@ -45,8 +45,25 @@ const Instructions: React.FC<InstructionsProps> = ({ onClose }) => {
           <GameModeExplanation title={t('start.guessSuccessor')} icon="👑">
             {t('instructions.guessSuccessor').split(' : ')[1] || t('instructions.guessSuccessor').split(': ')[1]}
           </GameModeExplanation>
+
+          <div className="pt-2 border-t border-slate-700/60">
+            <h3 className="text-lg font-bold text-yellow-400 mb-3 flex items-center gap-2">
+              <span className="text-xl">🎬</span>
+              <span>{t('instructions.videoTutorial')}</span>
+            </h3>
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700 shadow-xl bg-slate-950">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/M3X2tiEUah4"
+                title="How to Play Tutorial Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+          </div>
         </div>
-        <footer className="p-4 flex justify-end border-t border-slate-700">
+        <footer className="p-4 flex justify-end border-t border-slate-700 shrink-0">
           <button
             onClick={onClose}
             className="px-8 py-3 bg-green-500 text-black font-bold rounded-lg hover:bg-green-600 transform hover:scale-105 transition-all"
