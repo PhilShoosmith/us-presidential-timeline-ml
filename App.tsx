@@ -103,6 +103,18 @@ const App: React.FC = () => {
     setIsSoundMuted(newMuted);
   }, []);
 
+  // Automatically play opening background music ("Land of Hope and Glory") on opening screen
+  useEffect(() => {
+    if (gameState === 'start' && !isInstructionsOpen) {
+      soundService.playOpeningMusic();
+    } else {
+      soundService.pauseOpeningMusic();
+    }
+    return () => {
+      soundService.pauseOpeningMusic();
+    };
+  }, [gameState, isInstructionsOpen]);
+
   const clearTimer = useCallback(() => {
     if (timerIdRef.current) {
       clearInterval(timerIdRef.current);
@@ -113,6 +125,7 @@ const App: React.FC = () => {
 
   const startGame = useCallback((mode: GameMode) => {
     soundService.resume();
+    soundService.stopOpeningMusic();
     setShowConfetti(false);
     setGameMode(mode);
     const gamePresidents = (mode === 'year' || mode === 'fact')
@@ -322,7 +335,19 @@ const App: React.FC = () => {
   const renderGameScreen = () => {
     switch (gameState) {
       case 'start':
-        return <StartScreen onStart={startGame} presidents={allPresidentsData} onShowInstructions={() => setIsInstructionsOpen(true)} onReview={() => setGameState('review')} onShowPrivacy={handleShowPrivacy} onShowTerms={handleShowTerms} onShowLeaderboard={handleShowLeaderboard} />;
+        return (
+          <StartScreen 
+            onStart={startGame} 
+            presidents={allPresidentsData} 
+            onShowInstructions={() => setIsInstructionsOpen(true)} 
+            onReview={() => setGameState('review')} 
+            onShowPrivacy={handleShowPrivacy} 
+            onShowTerms={handleShowTerms} 
+            onShowLeaderboard={handleShowLeaderboard}
+            isMuted={isSoundMuted}
+            onToggleMute={toggleSoundMute}
+          />
+        );
       case 'privacy':
         return <PrivacyPolicy onBack={handleBackToStart} />;
       case 'terms':

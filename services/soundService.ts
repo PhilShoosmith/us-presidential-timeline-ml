@@ -13,6 +13,10 @@ class SoundService {
   private tensionGain: GainNode | null = null;
   private isTimerSoundRunning: boolean = false;
 
+  // Opening screen background music ("Land of Hope and Glory")
+  private openingAudio: HTMLAudioElement | null = null;
+  private isOpeningMusicActive: boolean = false;
+
   constructor() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('game_sound_muted');
@@ -20,9 +24,12 @@ class SoundService {
         this.isMuted = saved === 'true';
       }
 
-      // Auto-unlock audio context on first user interaction
+      // Auto-unlock audio context & trigger opening music if active on first user interaction
       const unlock = () => {
         this.resume();
+        if (this.isOpeningMusicActive && this.openingAudio && this.openingAudio.paused && !this.isMuted) {
+          this.openingAudio.play().catch(() => {});
+        }
         window.removeEventListener('pointerdown', unlock);
         window.removeEventListener('keydown', unlock);
       };
@@ -67,6 +74,13 @@ class SoundService {
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(muted ? 0 : 1, this.ctx.currentTime);
     }
+    if (this.openingAudio) {
+      this.openingAudio.muted = muted;
+      this.openingAudio.volume = muted ? 0 : 0.35;
+      if (!muted && this.isOpeningMusicActive && this.openingAudio.paused) {
+        this.openingAudio.play().catch(() => {});
+      }
+    }
     if (muted) {
       this.stopTimerSound();
     }
@@ -75,6 +89,66 @@ class SoundService {
   public toggleMute(): boolean {
     this.setMuted(!this.isMuted);
     return this.isMuted;
+  }
+
+  /**
+   * Plays the background music automatically on the opening screen.
+   * If browser autoplay restriction prevents immediate playback,
+   * listeners on user gestures ensure playback starts instantly upon first click/touch.
+   */
+  public playOpeningMusic() {
+    this.isOpeningMusicActive = true;
+    if (typeof window === 'undefined') return;
+
+    if (!this.openingAudio) {
+      this.openingAudio = new Audio('/audio/land-of-hope-and-glory.mp3');
+      this.openingAudio.loop = true;
+      this.openingAudio.preload = 'auto';
+    }
+
+    this.openingAudio.muted = this.isMuted;
+    this.openingAudio.volume = this.isMuted ? 0 : 0.35;
+
+    const playPromise = this.openingAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay policy prevented playback without interaction; attach gesture handlers
+        const startOnGesture = () => {
+          if (this.isOpeningMusicActive && this.openingAudio) {
+            this.openingAudio.play().catch(() => {});
+          }
+          window.removeEventListener('pointerdown', startOnGesture);
+          window.removeEventListener('keydown', startOnGesture);
+          window.removeEventListener('click', startOnGesture);
+          window.removeEventListener('touchstart', startOnGesture);
+        };
+        window.addEventListener('pointerdown', startOnGesture, { once: true, passive: true });
+        window.addEventListener('keydown', startOnGesture, { once: true, passive: true });
+        window.addEventListener('click', startOnGesture, { once: true, passive: true });
+        window.addEventListener('touchstart', startOnGesture, { once: true, passive: true });
+      });
+    }
+  }
+
+  /**
+   * Stops and resets opening music playback (when game begins or leaving start screen).
+   */
+  public stopOpeningMusic() {
+    this.isOpeningMusicActive = false;
+    if (this.openingAudio) {
+      this.openingAudio.pause();
+      this.openingAudio.currentTime = 0;
+    }
+  }
+
+  /**
+   * Pauses opening music playback without resetting position (e.g. while tutorial modal is open).
+   */
+  public pauseOpeningMusic() {
+    this.isOpeningMusicActive = false;
+    if (this.openingAudio) {
+      this.openingAudio.pause();
+    }
   }
 
   /**

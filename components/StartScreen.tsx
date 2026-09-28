@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { President, GameMode } from '../types';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Lightbulb, RefreshCw } from 'lucide-react';
+import { Lightbulb, RefreshCw, Volume2, VolumeX, Music } from 'lucide-react';
 
 interface StartScreenProps {
   onStart: (mode: GameMode) => void;
@@ -12,9 +12,21 @@ interface StartScreenProps {
   onShowPrivacy: () => void;
   onShowTerms: () => void;
   onShowLeaderboard: () => void;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowInstructions, onReview, onShowPrivacy, onShowTerms, onShowLeaderboard }) => {
+const StartScreen: React.FC<StartScreenProps> = ({ 
+  onStart, 
+  presidents, 
+  onShowInstructions, 
+  onReview, 
+  onShowPrivacy, 
+  onShowTerms, 
+  onShowLeaderboard,
+  isMuted = false,
+  onToggleMute
+}) => {
   const { t, getPresidentTranslation } = useLanguage();
   const [dailyFact, setDailyFact] = useState<President | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -71,6 +83,30 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, presidents, onShowIn
         </div>
       </div>
       
+      <div className="absolute top-4 left-4 z-[100]">
+        {onToggleMute && (
+          <button
+            onClick={onToggleMute}
+            className="flex items-center gap-2 bg-slate-800/90 text-slate-300 hover:text-white border border-slate-700/80 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 hover:bg-slate-700 transition-all shadow-md active:scale-95"
+            title={isMuted ? "Unmute Music & Sound" : "Mute Music & Sound"}
+            aria-label={isMuted ? "Unmute Music & Sound" : "Mute Music & Sound"}
+          >
+            {isMuted ? (
+              <>
+                <VolumeX className="w-4 h-4 text-red-400" />
+                <span className="text-xs font-medium text-slate-400">Music Off</span>
+              </>
+            ) : (
+              <>
+                <Music className="w-4 h-4 text-amber-400 animate-pulse" />
+                <span className="text-xs font-medium text-amber-300 hidden sm:inline">Land of Hope &amp; Glory</span>
+                <Volume2 className="w-3.5 h-3.5 text-amber-400/80" />
+              </>
+            )}
+          </button>
+        )}
+      </div>
+
       <LanguageSelector />
       
       <div className="w-full flex-grow flex flex-col items-center justify-center z-10">
