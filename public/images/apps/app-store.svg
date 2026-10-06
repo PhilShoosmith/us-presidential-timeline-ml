@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <rect width="512" height="512" rx="115" fill="#0071e3"/>
+  <!-- App Store 'A' symbol made of overlapping pencil, ruler, paintbrush -->
+  <g fill="#ffffff">
+    <!-- Ruler diagonal left to right -->
+    <path d="M136 348 L350 134 C356 128 366 128 372 134 L378 140 C384 146 384 156 378 162 L164 376 C158 382 148 382 142 376 L136 370 C130 364 130 354 136 348 Z" opacity="0.95"/>
+    <!-- Pencil diagonal right to left -->
+    <path d="M376 348 L162 134 C156 128 146 128 140 134 L134 140 C128 146 128 156 134 162 L348 376 C354 382 364 382 370 376 L376 370 C382 364 382 354 376 348 Z" opacity="0.95"/>
+    <!-- Horizontal bar (brush) across -->
+    <path d="M120 286 L392 286 C401 286 408 293 408 302 L408 306 C408 315 401 322 392 322 L120 322 C111 322 104 315 104 306 L104 302 C104 293 111 286 120 286 Z"/>
+  </g>
+</svg>

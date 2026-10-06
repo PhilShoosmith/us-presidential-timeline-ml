@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gpA" x1="90%" y1="13%" x2="42%" y2="52%">
+      <stop offset="0%" stop-color="#00A0FF"/>
+      <stop offset="0.7%" stop-color="#00A1FF"/>
+      <stop offset="100%" stop-color="#00BEFF"/>
+    </linearGradient>
+    <linearGradient id="gpB" x1="107%" y1="49%" x2="0%" y2="49%">
+      <stop offset="0%" stop-color="#FFE000"/>
+      <stop offset="41%" stop-color="#FFBD00"/>
+      <stop offset="78%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#FF9C00"/>
+    </linearGradient>
+    <linearGradient id="gpC" x1="86%" y1="83%" x2="22%" y2="29%">
+      <stop offset="0%" stop-color="#FF2F47"/>
+      <stop offset="100%" stop-color="#FF5252"/>
+    </linearGradient>
+    <linearGradient id="gpD" x1="18%" y1="74%" x2="84%" y2="18%">
+      <stop offset="0%" stop-color="#00EA76"/>
+      <stop offset="100%" stop-color="#01D169"/>
+    </linearGradient>
+  </defs>
+  <!-- Background path base -->
+  <path d="M72 45 C66 52 63 62 63 76 L63 436 C63 450 66 460 72 467 L74 469 L283 260 L283 252 L74 43 Z" fill="#00C3FF"/>
+  <!-- Top triangle -->
+  <path d="M352 329 L283 260 L72 467 C79 474 91 475 106 466 L353 329 Z" fill="#00E676"/>
+  <!-- Bottom triangle -->
+  <path d="M352 183 L106 46 C91 37 79 38 72 45 L283 252 L352 183 Z" fill="#FF3A44"/>
+  <!-- Right triangle -->
+  <path d="M352 329 L436 283 C454 273 454 239 436 229 L352 183 L283 256 Z" fill="#FFC107"/>
+</svg>
