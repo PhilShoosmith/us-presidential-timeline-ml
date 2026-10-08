@@ -1,28 +1,36 @@
 // Safe cache and service-worker cleanup for mobile devices
 try {
-  if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+  if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations()
       .then((registrations) => {
-        for (const registration of registrations) {
-          registration.unregister().catch(() => {});
+        if (Array.isArray(registrations)) {
+          for (const registration of registrations) {
+            try {
+              registration.unregister().catch(() => {});
+            } catch {}
+          }
         }
       })
-      .catch((e) => console.warn('SW unregister catch:', e));
+      .catch(() => {});
   }
 } catch (e) {
-  console.warn('SW check warning:', e);
+  // Ignore restricted SW access
 }
 
 try {
-  if (typeof window !== 'undefined' && 'caches' in window) {
+  if (typeof window !== 'undefined' && 'caches' in window && typeof window.caches?.keys === 'function') {
     window.caches.keys()
       .then((names) => {
-        for (const name of names) {
-          window.caches.delete(name).catch(() => {});
+        if (Array.isArray(names)) {
+          for (const name of names) {
+            try {
+              window.caches.delete(name).catch(() => {});
+            } catch {}
+          }
         }
       })
-      .catch((e) => console.warn('Caches delete catch:', e));
+      .catch(() => {});
   }
 } catch (e) {
-  console.warn('Cache clear error:', e);
+  // Ignore restricted cache storage access
 }

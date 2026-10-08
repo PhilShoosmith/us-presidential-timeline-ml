@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:server": "esbuild server.ts --bundle --platform=node --format=cjs --external:express --external:vite --external:firebase --sourcemap --define:process.env.NODE_ENV=\\\"production\\\" --outfile=dist/server.cjs",
-    "start": "npm run build:server && node dist/server.cjs",
+    "start": "npm run build && npm run build:server && node dist/server.cjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

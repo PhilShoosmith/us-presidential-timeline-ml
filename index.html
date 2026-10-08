@@ -13,8 +13,10 @@
         try {
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(regs) {
-              for (var i = 0; i < regs.length; i++) {
-                regs[i].unregister().catch(function() {});
+              if (Array.isArray(regs)) {
+                for (var i = 0; i < regs.length; i++) {
+                  regs[i].unregister().catch(function() {});
+                }
               }
             }).catch(function() {});
           }
@@ -22,20 +24,29 @@
 
         // Global fallback error boundary for mobile devices
         window.addEventListener('error', function(e) {
+          // Ignore non-fatal image or media load errors
+          if (e && e.target && (e.target.tagName === 'IMG' || e.target.tagName === 'AUDIO' || e.target.tagName === 'VIDEO')) {
+            return;
+          }
           console.error('Startup error:', e.error || e.message);
           var root = document.getElementById('root');
-          if (root && root.children.length === 0) {
+          var loader = document.getElementById('app-initial-loader');
+          // If the app failed to mount and only the loader is showing after 3 seconds:
+          if (loader && root) {
             setTimeout(function() {
-              if (root && root.children.length === 0) {
+              var currentLoader = document.getElementById('app-initial-loader');
+              if (currentLoader) {
+                var errMsg = (e && e.error && e.error.message) || (e && e.message) || 'Error loading application bundle';
                 root.innerHTML = '<div style="min-height:100vh;background:#0f172a;color:#f8fafc;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:system-ui,-apple-system,sans-serif;">' +
                   '<div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:32px 24px;max-width:380px;width:100%;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">' +
                   '<div style="font-size:36px;margin-bottom:12px;">🏛️</div>' +
                   '<h2 style="font-size:20px;font-weight:700;color:#fbbf24;margin-bottom:8px;">US Presidents Timeline</h2>' +
-                  '<p style="color:#94a3b8;font-size:14px;line-height:1.5;margin-bottom:20px;">A fresh update is ready. Tap below to reload the app.</p>' +
+                  '<p style="color:#94a3b8;font-size:14px;line-height:1.5;margin-bottom:16px;">A fresh update is ready. Tap below to reload the app.</p>' +
+                  '<pre style="background:#020617;color:#f87171;padding:10px;border-radius:8px;font-size:11px;text-align:left;overflow-x:auto;margin-bottom:20px;white-space:pre-wrap;">' + errMsg + '</pre>' +
                   '<button onclick="try{localStorage.clear();sessionStorage.clear();}catch(x){}location.reload(true);" style="background:#3b82f6;color:#ffffff;border:none;font-weight:700;font-size:15px;padding:12px 24px;border-radius:10px;cursor:pointer;width:100%;">Reload App</button>' +
                   '</div></div>';
               }
-            }, 1500);
+            }, 2000);
           }
         });
       })();
@@ -50,6 +61,14 @@
         color: #ffffff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         -webkit-tap-highlight-color: transparent;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.85; }
       }
       /* General Animations */
       @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -87,7 +106,16 @@
     </style>
   </head>
   <body class="bg-slate-900">
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-initial-loader" style="min-height:100vh;background:#0f172a;color:#f8fafc;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:system-ui,-apple-system,sans-serif;">
+        <div style="background:#1e293b;border:1px solid #334155;border-radius:20px;padding:36px 28px;max-width:360px;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+          <div style="font-size:48px;margin-bottom:16px;animation:pulse 1.5s infinite ease-in-out;">🏛️</div>
+          <h1 style="font-size:22px;font-weight:800;color:#fbbf24;margin:0 0 10px 0;letter-spacing:-0.02em;">US Presidents Timeline</h1>
+          <p style="color:#94a3b8;font-size:14px;margin:0 0 24px 0;">Loading historical timeline...</p>
+          <div style="width:36px;height:36px;margin:0 auto;border:3px solid #334155;border-top-color:#38bdf8;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
