@@ -19,22 +19,34 @@ class SoundService {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('game_sound_muted');
-      if (saved !== null) {
-        this.isMuted = saved === 'true';
+      try {
+        const saved = localStorage.getItem('game_sound_muted');
+        if (saved !== null) {
+          this.isMuted = saved === 'true';
+        }
+      } catch (e) {
+        console.warn('Storage access restricted:', e);
       }
 
       // Auto-unlock audio context & trigger opening music if active on first user interaction
       const unlock = () => {
-        this.resume();
-        if (this.isOpeningMusicActive && this.openingAudio && this.openingAudio.paused && !this.isMuted) {
-          this.openingAudio.play().catch(() => {});
+        try {
+          this.resume();
+          if (this.isOpeningMusicActive && this.openingAudio && this.openingAudio.paused && !this.isMuted) {
+            this.openingAudio.play().catch(() => {});
+          }
+        } catch (e) {
+          console.warn('Audio unlock warning:', e);
         }
-        window.removeEventListener('pointerdown', unlock);
-        window.removeEventListener('keydown', unlock);
+        try {
+          window.removeEventListener('pointerdown', unlock);
+          window.removeEventListener('keydown', unlock);
+        } catch {}
       };
-      window.addEventListener('pointerdown', unlock, { passive: true });
-      window.addEventListener('keydown', unlock, { passive: true });
+      try {
+        window.addEventListener('pointerdown', unlock, { passive: true });
+        window.addEventListener('keydown', unlock, { passive: true });
+      } catch {}
     }
   }
 
@@ -100,33 +112,43 @@ class SoundService {
     this.isOpeningMusicActive = true;
     if (typeof window === 'undefined') return;
 
-    if (!this.openingAudio) {
-      this.openingAudio = new Audio('/audio/land-of-hope-and-glory.mp3');
-      this.openingAudio.loop = true;
-      this.openingAudio.preload = 'auto';
-    }
+    try {
+      if (!this.openingAudio) {
+        this.openingAudio = new Audio('/audio/land-of-hope-and-glory.mp3');
+        this.openingAudio.loop = true;
+        this.openingAudio.preload = 'auto';
+      }
 
-    this.openingAudio.muted = this.isMuted;
-    this.openingAudio.volume = this.isMuted ? 0 : 0.35;
+      this.openingAudio.muted = this.isMuted;
+      this.openingAudio.volume = this.isMuted ? 0 : 0.35;
 
-    const playPromise = this.openingAudio.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay policy prevented playback without interaction; attach gesture handlers
-        const startOnGesture = () => {
-          if (this.isOpeningMusicActive && this.openingAudio) {
-            this.openingAudio.play().catch(() => {});
-          }
-          window.removeEventListener('pointerdown', startOnGesture);
-          window.removeEventListener('keydown', startOnGesture);
-          window.removeEventListener('click', startOnGesture);
-          window.removeEventListener('touchstart', startOnGesture);
-        };
-        window.addEventListener('pointerdown', startOnGesture, { once: true, passive: true });
-        window.addEventListener('keydown', startOnGesture, { once: true, passive: true });
-        window.addEventListener('click', startOnGesture, { once: true, passive: true });
-        window.addEventListener('touchstart', startOnGesture, { once: true, passive: true });
-      });
+      const playPromise = this.openingAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay policy prevented playback without interaction; attach gesture handlers
+          const startOnGesture = () => {
+            try {
+              if (this.isOpeningMusicActive && this.openingAudio) {
+                this.openingAudio.play().catch(() => {});
+              }
+            } catch {}
+            try {
+              window.removeEventListener('pointerdown', startOnGesture);
+              window.removeEventListener('keydown', startOnGesture);
+              window.removeEventListener('click', startOnGesture);
+              window.removeEventListener('touchstart', startOnGesture);
+            } catch {}
+          };
+          try {
+            window.addEventListener('pointerdown', startOnGesture, { once: true, passive: true });
+            window.addEventListener('keydown', startOnGesture, { once: true, passive: true });
+            window.addEventListener('click', startOnGesture, { once: true, passive: true });
+            window.addEventListener('touchstart', startOnGesture, { once: true, passive: true });
+          } catch {}
+        });
+      }
+    } catch (e) {
+      console.warn('HTMLAudio not supported or restricted:', e);
     }
   }
 
@@ -135,10 +157,12 @@ class SoundService {
    */
   public stopOpeningMusic() {
     this.isOpeningMusicActive = false;
-    if (this.openingAudio) {
-      this.openingAudio.pause();
-      this.openingAudio.currentTime = 0;
-    }
+    try {
+      if (this.openingAudio) {
+        this.openingAudio.pause();
+        this.openingAudio.currentTime = 0;
+      }
+    } catch {}
   }
 
   /**
@@ -146,9 +170,11 @@ class SoundService {
    */
   public pauseOpeningMusic() {
     this.isOpeningMusicActive = false;
-    if (this.openingAudio) {
-      this.openingAudio.pause();
-    }
+    try {
+      if (this.openingAudio) {
+        this.openingAudio.pause();
+      }
+    } catch {}
   }
 
   /**

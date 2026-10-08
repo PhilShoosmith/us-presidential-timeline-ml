@@ -3,12 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>US Presidents Timeline: A Yankee Guessing Game</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1e293b" />
+    <!-- Immediate Mobile Safety & SW Purge -->
+    <script>
+      (function() {
+        try {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              for (var i = 0; i < regs.length; i++) {
+                regs[i].unregister().catch(function() {});
+              }
+            }).catch(function() {});
+          }
+        } catch (e) {}
+
+        // Global fallback error boundary for mobile devices
+        window.addEventListener('error', function(e) {
+          console.error('Startup error:', e.error || e.message);
+          var root = document.getElementById('root');
+          if (root && root.children.length === 0) {
+            setTimeout(function() {
+              if (root && root.children.length === 0) {
+                root.innerHTML = '<div style="min-height:100vh;background:#0f172a;color:#f8fafc;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:system-ui,-apple-system,sans-serif;">' +
+                  '<div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:32px 24px;max-width:380px;width:100%;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">' +
+                  '<div style="font-size:36px;margin-bottom:12px;">🏛️</div>' +
+                  '<h2 style="font-size:20px;font-weight:700;color:#fbbf24;margin-bottom:8px;">US Presidents Timeline</h2>' +
+                  '<p style="color:#94a3b8;font-size:14px;line-height:1.5;margin-bottom:20px;">A fresh update is ready. Tap below to reload the app.</p>' +
+                  '<button onclick="try{localStorage.clear();sessionStorage.clear();}catch(x){}location.reload(true);" style="background:#3b82f6;color:#ffffff;border:none;font-weight:700;font-size:15px;padding:12px 24px;border-radius:10px;cursor:pointer;width:100%;">Reload App</button>' +
+                  '</div></div>';
+              }
+            }, 1500);
+          }
+        });
+      })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      /* Fallback basics */
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a;
+        color: #ffffff;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
       /* General Animations */
       @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
       .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
@@ -45,7 +87,6 @@
     </style>
   </head>
   <body class="bg-slate-900">
-    <script type="module" src="/clear-cache.ts"></script>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

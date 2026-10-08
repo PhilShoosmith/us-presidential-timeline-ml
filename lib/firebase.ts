@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   projectId: "us-presidents-timeline",
@@ -10,11 +10,22 @@ const firebaseConfig = {
   messagingSenderId: "1051748190259",
 };
 
-export const app = initializeApp(firebaseConfig);
-
-export let db: any = null;
+export let app: FirebaseApp | null = null;
 try {
-  db = getFirestore(app, "ai-studio-languagesuspresi-d755a2a6-54f6-4e18-9a9b-28e7f1872371");
+  app = initializeApp(firebaseConfig);
 } catch (e) {
-  console.warn("Failed to initialize Firestore (likely due to third-party cookies being blocked in Chrome):", e);
+  console.warn("Failed to initialize Firebase app:", e);
+}
+
+export let db: Firestore | null = null;
+if (app) {
+  try {
+    db = getFirestore(app, "ai-studio-remix7languagesu-e094a921-892c-481a-a8bb-d288cef022ad");
+  } catch (e) {
+    try {
+      db = getFirestore(app);
+    } catch (err) {
+      console.warn("Failed to initialize Firestore:", err);
+    }
+  }
 }

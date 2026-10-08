@@ -59,16 +59,17 @@ const StartScreen: React.FC<StartScreenProps> = ({
   };
   const allPortraits = presidents
     .map(president => ({ id: president.id, name: president.name, url: president.imageUrl }))
-    .filter(p => p.url);
+    .filter(p => p.url)
+    .slice(0, 12);
 
-  const animationDuration = allPortraits.length * 2;
+  const animationDuration = Math.max(20, allPortraits.length * 4);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden overflow-y-auto py-12 px-4">
-      <div className="absolute inset-0 flex items-center opacity-20 scale-110 blur-sm pointer-events-none z-0">
+      <div className="absolute inset-0 flex items-center opacity-20 scale-110 blur-sm pointer-events-none z-0 overflow-hidden">
         <div 
           className="flex-shrink-0 flex items-center animate-scroll-continuous"
-          style={{ animationDuration: `${animationDuration}s` }}
+          style={{ animationDuration: `${animationDuration}s`, willChange: 'transform' }}
         >
           {[...allPortraits, ...allPortraits].map((portrait, index) => (
             <div key={`${portrait.id}-${index}`} className="w-48 h-64 md:w-64 md:h-80 flex-shrink-0 mx-2">
