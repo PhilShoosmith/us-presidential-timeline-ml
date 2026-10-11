@@ -352,13 +352,14 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
       {areFiltersActive ? (
         <div className="w-full overflow-y-auto px-4 pt-4 pb-4 flex-grow">
           {filteredPresidents.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12 max-w-[120rem] mx-auto px-4 md:px-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 max-w-[120rem] mx-auto px-4 md:px-8">
               {filteredPresidents.map(president => (
-                <ReviewCard
-                  key={president.id}
-                  president={president}
-                  onClick={() => handleLearnMore(president)}
-                />
+                <div key={president.id} className="w-full max-w-[18rem] sm:max-w-[20rem] mx-auto">
+                  <ReviewCard
+                    president={president}
+                    onClick={() => handleLearnMore(president)}
+                  />
+                </div>
               ))}
             </div>
           ) : (
@@ -374,20 +375,20 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
       ) : (
         <>
           <div
-            className="absolute inset-x-0 top-24 bottom-0 flex items-start pt-4 md:pt-8"
+            className="absolute inset-x-0 top-16 sm:top-20 bottom-20 flex items-start pt-1 sm:pt-2 md:pt-3 overflow-hidden"
             onTouchStart={() => setIsTouched(true)}
             onTouchEnd={() => setIsTouched(false)}
             onTouchCancel={() => setIsTouched(false)}
           >
             <div 
               ref={carouselRef}
-              className="flex animate-scroll-continuous"
+              className="flex animate-scroll-continuous py-1 items-stretch"
               style={{ 
                 animationDuration: `${animationDuration}s`,
               }}
             >
               {[...presidents, ...presidents].map((president, index) => (
-                <div key={`${president.id}-${index}`} className="w-[16rem] md:w-[20rem] lg:w-[24rem] mx-4 md:mx-6 flex-shrink-0">
+                <div key={`${president.id}-${index}`} className="w-[15rem] sm:w-[17rem] md:w-[19rem] lg:w-[21rem] mx-1.5 sm:mx-2 md:mx-2.5 flex-shrink-0 flex">
                   <ReviewCard
                     president={president}
                     onMouseEnter={() => setIsHoverPaused(true)}
@@ -399,46 +400,46 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ presidents, onBack }) => {
             </div>
           </div>
           
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"></div>
           
           {/* Carousel Controls */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-slate-800/80 backdrop-blur-md px-6 py-3 rounded-full border border-slate-700 shadow-2xl z-30">
-            <div className="flex flex-col items-center mr-4">
-              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">{t('review.speed')}</span>
-              <span className="text-sm font-mono text-blue-400 font-bold">{isReversed ? '-' : ''}{speedMultiplier}x</span>
+          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4 bg-slate-800/90 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-slate-700 shadow-2xl z-30">
+            <div className="flex flex-col items-center mr-2 sm:mr-4">
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-0.5">{t('review.speed')}</span>
+              <span className="text-xs sm:text-sm font-mono text-blue-400 font-bold">{isReversed ? '-' : ''}{speedMultiplier}x</span>
             </div>
             
             <button 
               onClick={handleRewind}
-              className={`p-2 rounded-full transition-all ${isReversed ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
+              className={`p-1.5 sm:p-2 rounded-full transition-all ${isReversed ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
               title="Fast Reverse"
             >
-              <Rewind size={24} fill={isReversed ? "currentColor" : "none"} />
+              <Rewind className="w-5 h-5 sm:w-6 sm:h-6" fill={isReversed ? "currentColor" : "none"} />
             </button>
             
             <button 
               onClick={() => setIsManualPaused(!isManualPaused)}
-              className="p-3 bg-white text-slate-900 rounded-full hover:scale-110 transition-transform shadow-lg"
+              className="p-2 sm:p-2.5 bg-white text-slate-900 rounded-full hover:scale-110 transition-transform shadow-lg"
               title={isManualPaused ? "Play" : "Pause"}
             >
-              {isManualPaused ? <Play size={24} fill="currentColor" /> : <Pause size={24} fill="currentColor" />}
+              {isManualPaused ? <Play className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" /> : <Pause className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" />}
             </button>
             
             <button 
               onClick={handleFastForward}
-              className={`p-2 rounded-full transition-all ${(!isReversed && speedMultiplier > 1) ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
+              className={`p-1.5 sm:p-2 rounded-full transition-all ${(!isReversed && speedMultiplier > 1) ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
               title="Fast Forward"
             >
-              <FastForward size={24} fill={(!isReversed && speedMultiplier > 1) ? "currentColor" : "none"} />
+              <FastForward className="w-5 h-5 sm:w-6 sm:h-6" fill={(!isReversed && speedMultiplier > 1) ? "currentColor" : "none"} />
             </button>
             
             <button 
               onClick={handleResetSpeed}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-full transition-all ml-2"
+              className="p-1.5 sm:p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-full transition-all ml-1 sm:ml-2"
               title="Reset Speed"
             >
-              <RotateCcw size={20} />
+              <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </>

@@ -12,6 +12,7 @@ interface PresidentCardProps {
   stagedPortraitUrl?: string;
   onSealUpload?: (presidentId: number, newImageUrl: string) => void;
   stagedSealUrl?: string;
+  compact?: boolean;
 }
 
 const getPartyStyles = (party: string): { badge: string; cardHover: string; } => {
@@ -22,7 +23,7 @@ const getPartyStyles = (party: string): { badge: string; cardHover: string; } =>
   return { badge: 'bg-slate-700 text-slate-300', cardHover: 'hover:border-slate-600' };
 };
 
-const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAdmin, onPortraitUpload, stagedPortraitUrl, onSealUpload, stagedSealUrl }) => {
+const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAdmin, onPortraitUpload, stagedPortraitUrl, onSealUpload, stagedSealUrl, compact = false }) => {
   const { t, getPresidentTranslation } = useLanguage();
   const portraitFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -76,10 +77,16 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
   }
   
   return (
-    <div className={`bg-slate-800 rounded-2xl shadow-2xl p-4 border border-slate-700 flex flex-col items-center w-full max-w-[16rem] sm:max-w-xs transform transition-all duration-500 hover:scale-105 ${styles.cardHover}`}>
-      <div className="bg-gradient-to-br from-gray-700 via-gray-800 to-black p-2 rounded-lg shadow-lg mb-3 w-full">
+    <div className={`bg-slate-800 rounded-xl sm:rounded-2xl shadow-2xl border border-slate-700 flex flex-col items-center w-full transform transition-all duration-300 hover:scale-[1.02] ${styles.cardHover} ${
+      compact ? 'p-2.5 sm:p-3 max-w-[11.5rem] sm:max-w-[13rem]' : 'p-4 max-w-[16rem] sm:max-w-xs hover:scale-105 duration-500'
+    }`}>
+      <div className={`bg-gradient-to-br from-gray-700 via-gray-800 to-black rounded-lg shadow-lg w-full ${
+        compact ? 'p-1.5 mb-1.5 sm:mb-2' : 'p-2 mb-3'
+      }`}>
         <div 
-          className="relative aspect-[3/4] w-full rounded-md overflow-hidden bg-slate-700 flex items-center justify-center group shadow-inner"
+          className={`relative w-full rounded-md overflow-hidden bg-slate-700 flex items-center justify-center group shadow-inner ${
+            compact ? 'aspect-[3/4] max-h-28 sm:max-h-36' : 'aspect-[3/4]'
+          }`}
         >
           {displayImageUrl ? (
             <img 
@@ -90,10 +97,12 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
               key={displayImageUrl}
             />
           ) : (
-            <span className="text-slate-400">{t('card.portraitNotAvailable')}</span>
+            <span className={`text-slate-400 ${compact ? 'text-xs' : 'text-sm'}`}>{t('card.portraitNotAvailable')}</span>
           )}
           {stagedPortraitUrl && (
-            <div className="absolute top-2 right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow-lg pointer-events-none">
+            <div className={`absolute top-1.5 right-1.5 bg-yellow-400 text-yellow-900 font-bold px-1.5 py-0.5 rounded-full shadow-lg pointer-events-none ${
+              compact ? 'text-[10px]' : 'text-xs'
+            }`}>
               {t('card.pending')}
             </div>
           )}
@@ -105,9 +114,9 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
                 role="button"
                 aria-label="Change president portrait"
               >
-                <div className="text-center text-white p-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                  <p className="mt-2 font-semibold">{t('card.changePortrait')}</p>
+                <div className={`text-center text-white ${compact ? 'p-2' : 'p-4'}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-6 w-6' : 'h-10 w-10'} mx-auto`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                  <p className={`font-semibold ${compact ? 'text-xs mt-1' : 'text-sm mt-2'}`}>{t('card.changePortrait')}</p>
                 </div>
               </div>
               <input
@@ -124,35 +133,45 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
       <div 
         className="text-center w-full"
       >
-        <h2 className="text-3xl sm:text-4xl font-bold text-center text-white pointer-events-none">{name}</h2>
-        <p className="text-lg sm:text-xl text-slate-400 mt-2 pointer-events-none">{title}</p>
-        <div className={`text-md mt-2 font-semibold px-3 py-1 rounded-full inline-flex items-center gap-2 ${styles.badge} pointer-events-none`}>
-          <PartyIcon party={party} className="h-5 w-5" />
+        <h2 className={`font-bold text-center text-white pointer-events-none ${
+          compact ? 'text-base sm:text-lg leading-tight' : 'text-3xl sm:text-4xl'
+        }`}>{name}</h2>
+        <p className={`text-slate-400 pointer-events-none ${
+          compact ? 'text-xs mt-0.5 leading-tight' : 'text-lg sm:text-xl mt-2'
+        }`}>{title}</p>
+        <div className={`font-semibold rounded-full inline-flex items-center pointer-events-none ${styles.badge} ${
+          compact ? 'text-xs mt-1 px-2.5 py-0.5 gap-1.5' : 'text-md mt-2 px-3 py-1 gap-2'
+        }`}>
+          <PartyIcon party={party} className={compact ? 'h-3.5 w-3.5' : 'h-5 w-5'} />
           <span>{party}</span>
         </div>
       </div>
       
       {showTerm && (
-        <p className="text-md text-amber-300/80 mt-2 font-mono">
+        <p className={`text-amber-300/80 font-mono ${
+          compact ? 'text-xs mt-1' : 'text-md mt-2'
+        }`}>
           {termStart} – {termEndDisplay} {durationDisplay}
         </p>
       )}
 
-      <div className="mt-4 pt-4 w-full border-t border-slate-700/50 flex justify-center">
-        <div className="flex items-center justify-center gap-4">
-           <div className="w-6 h-6 text-slate-400 animate-rise-up" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className={`w-full border-t border-slate-700/50 flex justify-center ${
+        compact ? 'mt-2 pt-2' : 'mt-4 pt-4'
+      }`}>
+        <div className={`flex items-center justify-center ${compact ? 'gap-2' : 'gap-4'}`}>
+           <div className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5M5 12l7-7 7 7" />
             </svg>
           </div>
           <PresidentialSeal
-              className="w-16 h-16"
+              className={compact ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-16 h-16'}
               isAdmin={isAdmin}
               imageUrl={stagedSealUrl || president.sealUrl}
               onImageUpload={handleSealUpload}
           />
-           <div className="w-6 h-6 text-slate-400 animate-rise-up" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <div className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5M5 12l7-7 7 7" />
             </svg>
           </div>

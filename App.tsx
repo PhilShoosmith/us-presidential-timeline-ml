@@ -362,7 +362,9 @@ const App: React.FC = () => {
       case 'feedback':
         if (!currentPresident) return null;
         return (
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col items-center justify-start min-h-screen pt-20 sm:pt-24 pb-4">
+          <div className={`w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col items-center justify-start min-h-screen ${
+            gameMode === 'year' ? 'pt-20 sm:pt-24 md:pt-28 pb-4' : 'pt-20 sm:pt-24 pb-4'
+          }`}>
             <Scoreboard 
               score={score} 
               incorrect={currentRound - score} 
@@ -373,13 +375,27 @@ const App: React.FC = () => {
               isMuted={isSoundMuted}
               onToggleMute={toggleSoundMute}
             />
-            <div className="w-full flex flex-col md:flex-row md:items-start md:justify-center gap-4 lg:gap-8">
+            <div className={`w-full flex ${
+              gameMode === 'year'
+                ? 'flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 lg:gap-8 mt-2 sm:mt-4'
+                : 'flex-col md:flex-row md:items-start md:justify-center gap-4 lg:gap-8'
+            }`}>
               {(gameState === 'feedback' || (gameState === 'playing' && gameMode !== 'fact')) && (
-                <div className="w-full flex justify-center md:justify-end flex-shrink-0 md:w-1/2 lg:w-auto">
-                  <PresidentCard president={currentPresident} showTerm={gameState === 'feedback' || isAdmin} />
+                <div className={`flex justify-center flex-shrink-0 ${
+                  gameMode === 'year' ? 'w-auto' : 'w-full md:justify-end md:w-1/2 lg:w-auto'
+                }`}>
+                  <PresidentCard 
+                    president={currentPresident} 
+                    showTerm={gameState === 'feedback' || isAdmin} 
+                    compact={gameMode === 'year'} 
+                  />
                 </div>
               )}
-              <div className="w-full md:w-1/2 lg:max-w-md mt-4 md:mt-0 flex flex-col justify-start">
+              <div className={`flex flex-col justify-center ${
+                gameMode === 'year' 
+                  ? 'w-full max-w-xs sm:max-w-sm mt-1 sm:mt-0' 
+                  : 'w-full md:w-1/2 lg:max-w-md mt-4 md:mt-0 justify-start'
+              }`}>
                 {gameState === 'feedback' && lastGuess ? (
                   <Feedback 
                     lastGuess={lastGuess} 
@@ -415,11 +431,11 @@ const App: React.FC = () => {
                 ) : (
                    <>
                     {gameMode === 'year' && (
-                       <div className="p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50">
-                        <p className="text-base text-slate-300 font-light mb-3 text-center">{t('game.placePresident', { name: currentPresident.name })}</p>
-                        <form onSubmit={(e) => { e.preventDefault(); handleYearGuess(parseInt(typedYear, 10)); }} className="flex flex-col sm:flex-row items-center gap-3 w-full">
-                            <input type="number" value={typedYear} onChange={(e) => setTypedYear(e.target.value)} placeholder={t('game.year')} className="bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white w-full text-center" disabled={isGuessingInProgress} />
-                            <button type="submit" className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700" disabled={isGuessingInProgress}>{t('game.submit')}</button>
+                       <div className="p-2.5 sm:p-3.5 bg-slate-800/50 rounded-xl sm:rounded-2xl border border-slate-700/50 shadow-md">
+                        <p className="text-xs sm:text-sm text-slate-300 font-light mb-1.5 sm:mb-2 text-center">{t('game.placePresident', { name: currentPresident.name })}</p>
+                        <form onSubmit={(e) => { e.preventDefault(); handleYearGuess(parseInt(typedYear, 10)); }} className="flex flex-row items-center gap-2 w-full">
+                            <input type="number" value={typedYear} onChange={(e) => setTypedYear(e.target.value)} placeholder={t('game.year')} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white w-full text-center text-sm sm:text-base" disabled={isGuessingInProgress} />
+                            <button type="submit" className="w-auto px-4 sm:px-5 py-1.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 text-sm sm:text-base whitespace-nowrap" disabled={isGuessingInProgress}>{t('game.submit')}</button>
                         </form>
                        </div>
                     )}
@@ -437,7 +453,7 @@ const App: React.FC = () => {
               </div>
             </div>
             {gameMode === 'year' && (
-              <div className="w-full mt-4">
+              <div className="w-full mt-2 sm:mt-3">
                  <Timeline onGuess={handleYearGuess} disabled={gameState === 'feedback' || isGuessingInProgress} lastGuess={lastGuess?.type === 'year' ? lastGuess : null} allPresidents={presidents} guessFeedback={guessFeedback?.type === 'year' ? { ...guessFeedback, type: 'year' as const } : null} />
               </div>
             )}
