@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { presidentsCareerData, careerCategoryConfig } from '../data/presidentsCareerData';
 import { CareerCategory, CareerNode } from '../types';
+import { presidentsTenureHighlights } from '../data/presidentsTenureHighlights';
+import { TenureHighlightsSection } from './TenureHighlightsSection';
 import { 
   GitBranch, 
   FileText, 
@@ -57,6 +59,15 @@ const RAGModal: React.FC<RAGModalProps> = ({
       p.presidentName.toLowerCase().includes(cleanTitle)
     ) || null;
   }, [content]);
+
+  const tenureHighlight = useMemo(() => {
+    if (!content) return null;
+    const id = careerProfile?.presidentId || content.presidentId;
+    if (id && presidentsTenureHighlights[id]) {
+      return presidentsTenureHighlights[id];
+    }
+    return null;
+  }, [content, careerProfile]);
 
   useEffect(() => {
     setTranslatedText(null);
@@ -421,6 +432,13 @@ const RAGModal: React.FC<RAGModalProps> = ({
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {/* Tenure Highlights Section at the end of Career Tree */}
+              {tenureHighlight && (
+                <div className="mt-4">
+                  <TenureHighlightsSection highlight={tenureHighlight} />
                 </div>
               )}
             </div>

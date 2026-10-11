@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { President, CareerCategory, CareerNode } from '../types';
 import { presidentsCareerData, careerCategoryConfig } from '../data/presidentsCareerData';
+import { presidentsTenureHighlights } from '../data/presidentsTenureHighlights';
+import { TenureHighlightsSection } from './TenureHighlightsSection';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface CareerTreeModalProps {
@@ -64,6 +66,10 @@ export const CareerTreeModal: React.FC<CareerTreeModalProps> = ({
 
   const careerProfile = useMemo(() => {
     return presidentsCareerData[currentId];
+  }, [currentId]);
+
+  const tenureHighlight = useMemo(() => {
+    return presidentsTenureHighlights[currentId];
   }, [currentId]);
 
   const filteredNodes = useMemo(() => {
@@ -431,6 +437,13 @@ export const CareerTreeModal: React.FC<CareerTreeModalProps> = ({
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {/* Tenure Highlights Section at the end of the Career Tree screen */}
+          {tenureHighlight && (
+            <div className="max-w-4xl mx-auto pb-4">
+              <TenureHighlightsSection highlight={tenureHighlight} />
             </div>
           )}
         </div>
