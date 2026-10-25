@@ -15,6 +15,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
   const [timeFilter, setTimeFilter] = useState<'last_week' | 'last_month' | 'all_time'>('all_time');
   const [scores, setScores] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -116,8 +117,11 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
         });
 
         setScores(formattedData);
-      } catch (err) {
+        setError(null);
+      } catch (err: any) {
         console.error('Error fetching leaderboard:', err);
+        setError(err?.message || 'Failed to load scores');
+        setScores([]);
       } finally {
         setLoading(false);
       }
