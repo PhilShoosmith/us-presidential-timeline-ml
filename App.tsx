@@ -363,7 +363,7 @@ const App: React.FC = () => {
         if (!currentPresident) return null;
         return (
           <div className={`w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col items-center justify-start min-h-screen ${
-            gameMode === 'year' ? 'pt-20 sm:pt-24 md:pt-28 pb-4' : 'pt-20 sm:pt-24 pb-4'
+            gameMode === 'year' ? 'pt-16 sm:pt-24 md:pt-28 pb-3 sm:pb-4' : 'pt-20 sm:pt-24 pb-4'
           }`}>
             <Scoreboard 
               score={score} 
@@ -377,8 +377,8 @@ const App: React.FC = () => {
             />
             <div className={`w-full flex ${
               gameMode === 'year'
-                ? 'flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 lg:gap-8 mt-2 sm:mt-4'
-                : 'flex-col md:flex-row md:items-start md:justify-center gap-4 lg:gap-8'
+                ? 'flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 lg:gap-8 mt-1 sm:mt-4'
+                : 'flex-col md:flex-row md:items-start md:justify-center gap-2 sm:gap-4 lg:gap-8 mt-1 sm:mt-2'
             }`}>
               {(gameState === 'feedback' || (gameState === 'playing' && gameMode !== 'fact')) && (
                 <div className={`flex justify-center flex-shrink-0 ${
@@ -387,14 +387,14 @@ const App: React.FC = () => {
                   <PresidentCard 
                     president={currentPresident} 
                     showTerm={gameState === 'feedback' || isAdmin} 
-                    compact={gameMode === 'year'} 
+                    compact={true} 
                   />
                 </div>
               )}
               <div className={`flex flex-col justify-center ${
                 gameMode === 'year' 
                   ? 'w-full max-w-xs sm:max-w-sm mt-1 sm:mt-0' 
-                  : 'w-full md:w-1/2 lg:max-w-md mt-4 md:mt-0 justify-start'
+                  : 'w-full md:w-1/2 lg:max-w-md mt-2 md:mt-0 justify-start'
               }`}>
                 {gameState === 'feedback' && lastGuess ? (
                   <Feedback 

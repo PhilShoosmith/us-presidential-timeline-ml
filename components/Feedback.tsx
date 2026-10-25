@@ -22,8 +22,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (timedOut) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.timeUp')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.timeUp')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.yearWas').replace('{year}', String(correctYear))}
             </p>
           </div>
@@ -32,8 +32,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (isCorrect) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-green-400 mb-2">{t('feedback.correct')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-green-400 mb-1 sm:mb-2">{t('feedback.correct')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.yearCorrectDesc', { year: correctYear })}
             </p>
           </div>
@@ -41,8 +41,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       }
       return (
         <div>
-          <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.incorrect')}</h3>
-          <p className="text-slate-300">
+          <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.incorrect')}</h3>
+          <p className="text-xs sm:text-base text-slate-300">
             {t('feedback.yearIncorrectDesc', { guessed: guessedYear })}<span className="font-bold text-white">{correctYear}</span>.
           </p>
         </div>
@@ -57,8 +57,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (timedOut) {
          return (
           <div>
-            <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.timeUp')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.timeUp')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.successorWas').replace('{name}', correctPresident?.name || 'Unknown')}
             </p>
           </div>
@@ -67,8 +67,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (isCorrect) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-green-400 mb-2">{t('feedback.correct')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-green-400 mb-1 sm:mb-2">{t('feedback.correct')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.successorCorrectDesc', { name: correctPresident?.name || t('feedback.unknown') })}
             </p>
           </div>
@@ -76,8 +76,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       }
       return (
         <div>
-          <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.incorrect')}</h3>
-          <p className="text-slate-300">
+          <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.incorrect')}</h3>
+          <p className="text-xs sm:text-base text-slate-300">
             {t('feedback.successorIncorrectDesc', { guessed: guessedPresident?.name || t('feedback.unknownPresident') })}<span className="font-bold text-white">{correctPresident?.name || t('feedback.unknown')}</span>.
           </p>
         </div>
@@ -92,8 +92,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (timedOut) {
          return (
           <div>
-            <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.timeUp')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.timeUp')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.presidentWas').replace('{name}', correctPresident?.name || 'Unknown')}
             </p>
           </div>
@@ -102,8 +102,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       if (isCorrect) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-green-400 mb-2">{t('feedback.correct')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-xl sm:text-3xl font-bold text-green-400 mb-1 sm:mb-2">{t('feedback.correct')}</h3>
+            <p className="text-xs sm:text-base text-slate-300">
               {t('feedback.presidentCorrectDesc', { name: correctPresident?.name || t('feedback.unknown') })}
             </p>
           </div>
@@ -111,8 +111,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
       }
       return (
         <div>
-          <h3 className="text-3xl font-bold text-red-400 mb-2">{t('feedback.incorrect')}</h3>
-          <p className="text-slate-300">
+          <h3 className="text-xl sm:text-3xl font-bold text-red-400 mb-1 sm:mb-2">{t('feedback.incorrect')}</h3>
+          <p className="text-xs sm:text-base text-slate-300">
             {t('feedback.presidentIncorrectDesc', { guessed: guessedPresident?.name || t('feedback.unknownPresident') })}<span className="font-bold text-white">{correctPresident?.name || t('feedback.unknown')}</span>.
           </p>
         </div>
@@ -123,19 +123,19 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
   };
 
   return (
-    <div className="w-full mx-auto p-6 bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700 text-center animate-fade-in-up">
+    <div className="w-full mx-auto p-3.5 sm:p-6 bg-slate-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl border border-slate-700 text-center animate-fade-in-up">
       {renderFeedbackContent()}
 
-      <div className="mt-4 p-3 bg-slate-900/50 border border-slate-700 rounded-lg text-left">
-        <p className="text-sm text-slate-300 leading-relaxed">
+      <div className="mt-2.5 sm:mt-4 p-2.5 sm:p-3 bg-slate-900/50 border border-slate-700 rounded-lg text-left">
+        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
           <span className="font-bold text-amber-400">{t('feedback.didYouKnow')}</span> {getPresidentTranslation(president.id, 'context', president.context)}
         </p>
       </div>
 
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
+      <div className="mt-3 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-wrap">
         <button
           onClick={onStop}
-          className="w-full sm:w-auto px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-4 sm:px-6 py-1.5 sm:py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-base"
           aria-label="Stop game and return to start screen"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -145,10 +145,10 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
         </button>
         <button
           onClick={() => onLearnMore(president)}
-          className="w-full sm:w-auto px-6 py-2 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-green-500/50 flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-4 sm:px-6 py-1.5 sm:py-2 bg-green-400 text-black font-semibold rounded-lg hover:bg-green-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-green-500/50 flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-base"
           aria-label={`Learn more about ${president.name}`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
           </svg>
           {t('feedback.learnMore')}
@@ -156,16 +156,16 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, president, onLea
         {onShowCareer && (
           <button
             onClick={() => onShowCareer(president)}
-            className="w-full sm:w-auto px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-500/50 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-4 sm:px-6 py-1.5 sm:py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-500/50 flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-base"
             aria-label={`View Career Tree for ${president.name}`}
           >
-            <GitBranch className="w-5 h-5" />
+            <GitBranch className="w-4 h-4 sm:w-5 sm:h-5" />
             Career Tree
           </button>
         )}
         <button
           onClick={onNext}
-          className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+          className="w-full sm:w-auto px-5 sm:px-6 py-1.5 sm:py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 text-xs sm:text-base"
         >
           {t('feedback.nextRound')}
         </button>

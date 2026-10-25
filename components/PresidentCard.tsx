@@ -78,21 +78,21 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
   
   return (
     <div className={`bg-slate-800 rounded-xl sm:rounded-2xl shadow-2xl border border-slate-700 flex flex-col items-center w-full transform transition-all duration-300 hover:scale-[1.02] ${styles.cardHover} ${
-      compact ? 'p-2.5 sm:p-3 max-w-[11.5rem] sm:max-w-[13rem]' : 'p-4 max-w-[16rem] sm:max-w-xs hover:scale-105 duration-500'
+      compact ? 'p-1.5 sm:p-3 max-w-[9.5rem] sm:max-w-[13rem]' : 'p-2.5 sm:p-4 max-w-[12.5rem] sm:max-w-xs hover:scale-105 duration-500'
     }`}>
       <div className={`bg-gradient-to-br from-gray-700 via-gray-800 to-black rounded-lg shadow-lg w-full ${
-        compact ? 'p-1.5 mb-1.5 sm:mb-2' : 'p-2 mb-3'
+        compact ? 'p-1 mb-1 sm:p-1.5 sm:mb-2' : 'p-1.5 sm:p-2 mb-2 sm:mb-3'
       }`}>
         <div 
-          className={`relative w-full rounded-md overflow-hidden bg-slate-700 flex items-center justify-center group shadow-inner ${
-            compact ? 'aspect-[3/4] max-h-28 sm:max-h-36' : 'aspect-[3/4]'
+          className={`relative w-full rounded-md overflow-hidden bg-slate-900 flex items-center justify-center group shadow-inner ${
+            compact ? 'aspect-[3/4] h-24 sm:h-36 max-h-36' : 'aspect-[3/4] h-32 sm:h-auto max-h-44 sm:max-h-none'
           }`}
         >
           {displayImageUrl ? (
             <img 
               src={displayImageUrl} 
               alt={`Portrait of ${name}`} 
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-contain object-top transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
               key={displayImageUrl}
             />
@@ -134,44 +134,44 @@ const PresidentCard: React.FC<PresidentCardProps> = ({ president, showTerm, isAd
         className="text-center w-full"
       >
         <h2 className={`font-bold text-center text-white pointer-events-none ${
-          compact ? 'text-base sm:text-lg leading-tight' : 'text-3xl sm:text-4xl'
+          compact ? 'text-sm sm:text-lg leading-tight' : 'text-lg sm:text-3xl md:text-4xl leading-tight sm:leading-normal'
         }`}>{name}</h2>
         <p className={`text-slate-400 pointer-events-none ${
-          compact ? 'text-xs mt-0.5 leading-tight' : 'text-lg sm:text-xl mt-2'
+          compact ? 'text-[10px] sm:text-xs mt-0.5 leading-tight' : 'text-xs sm:text-lg md:text-xl mt-0.5 sm:mt-2 leading-tight'
         }`}>{title}</p>
         <div className={`font-semibold rounded-full inline-flex items-center pointer-events-none ${styles.badge} ${
-          compact ? 'text-xs mt-1 px-2.5 py-0.5 gap-1.5' : 'text-md mt-2 px-3 py-1 gap-2'
+          compact ? 'text-[10px] sm:text-xs mt-0.5 sm:mt-1 px-2 sm:px-2.5 py-0.2 sm:py-0.5 gap-1 sm:gap-1.5' : 'text-xs sm:text-base mt-1.5 sm:mt-2 px-2.5 sm:px-3 py-0.5 sm:py-1 gap-1.5 sm:gap-2'
         }`}>
-          <PartyIcon party={party} className={compact ? 'h-3.5 w-3.5' : 'h-5 w-5'} />
+          <PartyIcon party={party} className={compact ? 'h-3 w-3 sm:h-3.5 sm:w-3.5' : 'h-3.5 w-3.5 sm:h-5 sm:w-5'} />
           <span>{party}</span>
         </div>
       </div>
       
       {showTerm && (
         <p className={`text-amber-300/80 font-mono ${
-          compact ? 'text-xs mt-1' : 'text-md mt-2'
+          compact ? 'text-[10px] sm:text-xs mt-0.5 sm:mt-1' : 'text-xs sm:text-base mt-1 sm:mt-2'
         }`}>
           {termStart} – {termEndDisplay} {durationDisplay}
         </p>
       )}
 
       <div className={`w-full border-t border-slate-700/50 flex justify-center ${
-        compact ? 'mt-2 pt-2' : 'mt-4 pt-4'
+        compact ? 'mt-1.5 sm:mt-2 pt-1.5 sm:pt-2' : 'mt-2 sm:mt-4 pt-2 sm:pt-4'
       }`}>
-        <div className={`flex items-center justify-center ${compact ? 'gap-2' : 'gap-4'}`}>
-           <div className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className={`flex items-center justify-center ${compact ? 'gap-1.5 sm:gap-2' : 'gap-2 sm:gap-4'}`}>
+           <div className={`${compact ? 'w-3 h-3 sm:w-4 sm:h-4' : 'w-4 h-4 sm:w-6 sm:h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-2.5 w-2.5 sm:h-3.5 sm:w-3.5' : 'h-3.5 w-3.5 sm:h-5 sm:w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5M5 12l7-7 7 7" />
             </svg>
           </div>
           <PresidentialSeal
-              className={compact ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-16 h-16'}
+              className={compact ? 'w-6 h-6 sm:w-10 sm:h-10' : 'w-9 h-9 sm:w-16 sm:h-16'}
               isAdmin={isAdmin}
               imageUrl={stagedSealUrl || president.sealUrl}
               onImageUpload={handleSealUpload}
           />
-           <div className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-3.5 w-3.5' : 'h-5 w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <div className={`${compact ? 'w-3 h-3 sm:w-4 sm:h-4' : 'w-4 h-4 sm:w-6 sm:h-6'} text-slate-400 animate-rise-up`} aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${compact ? 'h-2.5 w-2.5 sm:h-3.5 sm:w-3.5' : 'h-3.5 w-3.5 sm:h-5 sm:w-5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5M5 12l7-7 7 7" />
             </svg>
           </div>
