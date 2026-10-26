@@ -29,20 +29,20 @@ const LanguageSelector: React.FC = () => {
   const currentLang = languages.find(l => l.code === language) || languages[0];
 
   return (
-    <div className="absolute top-4 right-4 z-[100]" ref={dropdownRef}>
+    <div className="relative z-[100]" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-slate-800 text-white border border-slate-600 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 transition-colors shadow-sm"
+        className="flex items-center gap-1.5 sm:gap-2 bg-slate-800/90 text-white border border-slate-700/80 rounded-lg px-2 sm:px-2.5 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-700 transition-colors shadow-md"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <img src={currentLang.flagUrl} alt={`${currentLang.label} flag`} className="w-5 h-auto rounded-sm shadow-sm" />
-        <span>{currentLang.label}</span>
-        <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+        <img src={currentLang.flagUrl} alt={`${currentLang.label} flag`} className="w-4 h-auto rounded-sm shadow-sm" />
+        <span className="font-medium text-[11px] sm:text-xs">{currentLang.label}</span>
+        <svg className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-full min-w-[130px] bg-slate-800 border border-slate-600 rounded-md shadow-xl overflow-hidden" role="listbox">
+        <div className="absolute right-0 mt-1.5 w-full min-w-[130px] bg-slate-800 border border-slate-600 rounded-lg shadow-2xl overflow-hidden z-[110]" role="listbox">
           {languages.map((lang) => (
             <button
               key={lang.code}

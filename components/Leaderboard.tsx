@@ -143,10 +143,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="w-full min-h-screen bg-slate-900 flex items-center justify-center p-2 sm:p-4">
       <Confetti />
-      <div className="w-full max-w-4xl bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-slate-700 p-8 flex flex-col animate-scale-in">
-        <header className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+      <div className="w-full max-w-4xl bg-slate-800/80 backdrop-blur-xl rounded-2xl sm:rounded-[2.5rem] shadow-2xl border border-slate-700 p-3.5 sm:p-6 md:p-8 flex flex-col animate-scale-in">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-4 sm:mb-8 gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 text-center md:text-left md:flex-1 whitespace-nowrap">
             🏆 {t('leaderboard.title')}
           </h1>
@@ -197,39 +197,47 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onBack }) => {
           ))}
         </nav>
 
-        <div className="flex-grow overflow-x-auto bg-slate-900/40 rounded-3xl border border-slate-700/50">
-          <table className="w-full text-left border-collapse min-w-[400px] sm:min-w-full">
+        <div className="flex-grow bg-slate-900/40 rounded-2xl sm:rounded-3xl border border-slate-700/50 overflow-hidden">
+          <table className="w-full text-left border-collapse table-fixed">
             <thead>
-              <tr className="bg-slate-800/50 text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-[0.2em] font-black">
-                <th className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{t('leaderboard.rank')}</th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{t('leaderboard.name')}</th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{t('scoreboard.score').split(':')[0]}</th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{t('leaderboard.time')}</th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{t('leaderboard.date')}</th>
+              <tr className="bg-slate-800/50 text-slate-400 text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-[0.15em] font-black">
+                <th className="w-[12%] sm:w-[10%] px-1.5 sm:px-3 md:px-4 py-2 sm:py-3.5 text-center">{t('leaderboard.rank')}</th>
+                <th className="w-[32%] sm:w-[36%] px-1.5 sm:px-3 md:px-4 py-2 sm:py-3.5 truncate">{t('leaderboard.name')}</th>
+                <th className="w-[18%] sm:w-[16%] px-1 sm:px-2 md:px-4 py-2 sm:py-3.5 text-center">{t('scoreboard.score').split(':')[0]}</th>
+                <th className="w-[18%] sm:w-[18%] px-1 sm:px-2 md:px-4 py-2 sm:py-3.5 text-center truncate">{t('leaderboard.time')}</th>
+                <th className="w-[20%] sm:w-[20%] px-1 sm:px-2 md:px-4 py-2 sm:py-3.5 text-center truncate">{t('leaderboard.date')}</th>
               </tr>
             </thead>
-            <tbody className="text-xs sm:text-sm md:text-base">
+            <tbody className="text-[11px] sm:text-sm md:text-base">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-2 sm:px-4 md:px-6 py-12 text-center text-slate-500 animate-pulse">
+                  <td colSpan={5} className="px-2 sm:px-4 md:px-6 py-10 sm:py-12 text-center text-slate-500 animate-pulse text-xs sm:text-sm">
                     {t('leaderboard.loading')}
                   </td>
                 </tr>
               ) : scores.length > 0 ? (
                 scores.map((entry, idx) => (
-                  <tr key={idx} className={`border-b border-slate-700/50 transition-colors hover:bg-slate-700/20 ${idx < 3 ? 'text-white font-bold' : 'text-slate-300'}`}>
-                    <td className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">
+                  <tr key={idx} className={`border-b border-slate-700/40 transition-colors hover:bg-slate-700/20 ${idx < 3 ? 'text-white font-bold' : 'text-slate-300'}`}>
+                    <td className="px-1.5 sm:px-3 md:px-4 py-2 sm:py-3 text-center whitespace-nowrap">
                       {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
                     </td>
-                    <td className="px-2 sm:px-4 md:px-6 py-3 sm:py-4">{entry.name}</td>
-                    <td className="px-2 sm:px-4 md:px-6 py-3 sm:py-4 text-green-400">{entry.score} / 10</td>
-                    <td className="px-2 sm:px-4 md:px-6 py-3 sm:py-4 text-cyan-400">{entry.totalTimeLeft}s</td>
-                    <td className="px-2 sm:px-4 md:px-6 py-3 sm:py-4 text-slate-500 text-[10px] sm:text-xs">{entry.date}</td>
+                    <td className="px-1.5 sm:px-3 md:px-4 py-2 sm:py-3 truncate font-medium text-slate-200" title={entry.name}>
+                      {entry.name}
+                    </td>
+                    <td className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 text-center text-green-400 font-bold whitespace-nowrap">
+                      {entry.score}
+                    </td>
+                    <td className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 text-center text-cyan-400 whitespace-nowrap text-[10px] sm:text-sm">
+                      {entry.totalTimeLeft}s
+                    </td>
+                    <td className="px-1 sm:px-2 md:px-4 py-2 sm:py-3 text-center text-slate-400 text-[9px] sm:text-xs whitespace-nowrap font-mono">
+                      {entry.date}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-2 sm:px-4 md:px-6 py-12 text-center text-slate-500 font-medium italic">
+                  <td colSpan={5} className="px-2 sm:px-4 md:px-6 py-10 sm:py-12 text-center text-slate-500 font-medium italic text-xs sm:text-sm">
                     {t('leaderboard.noScores')}
                   </td>
                 </tr>
